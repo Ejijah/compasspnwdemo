@@ -84,7 +84,12 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-2px) rotate(5deg); }
         }
-        .compass-icon { font-size: 20px; animation: compassFloat 3s ease-in-out infinite; display: inline-block; }
+        .compass-icon { 
+            font-size: 40px; 
+            animation: compassFloat 3s ease-in-out infinite; 
+            display: inline-block;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03); 
@@ -266,7 +271,7 @@
     <div class="top-nav">
         <div style="display:flex; flex-direction:column; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
-                <span class="compass-icon">🧭</span>
+                <span class="compass-icon">🏔️</span>
                 <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
             </div>
             <div class="btn-reroll" onclick="reRoll()">
@@ -593,7 +598,7 @@ function openDetail(index) {
                 </div>
                 <div class="btn-share" onclick="shareHike(${index})">SHARE TRIP</div>
             </div>
-            <div id="spacer-detail" style="height: 600px; width: 100%;"></div>
+            <div id="spacer-detail" style="height: 100px; width: 100%;"></div>
         </div>
     `;
     document.getElementById('detail-content').innerHTML = content;
@@ -642,12 +647,12 @@ function updateUI(shuffleEffect = false) {
             <span>☕ Buy me & my cute girl a coffee</span>
         </a>
 
-        <div id="spacer" style="height: 600px; width: 100%;"></div>`; 
+        <div id="spacer" style="height: 100px; width: 100%;"></div>`; 
 }
 
-// --- SNAPPY SYMMETRICAL SLINGBACK SCRIPT ---
-// Slowed down the response time to reduce 'snappiness'
-function applySlingBack(element, threshold = 150) {
+// --- SLINGBACK SCRIPT ---
+// Reduced threshold to limit how far down the user can scroll before snapping back
+function applySlingBack(element, threshold = 60) {
     let scrollTimeout;
     element.addEventListener('scroll', function () {
         window.clearTimeout(scrollTimeout);
@@ -661,12 +666,12 @@ function applySlingBack(element, threshold = 150) {
             else if (currentScroll > 0 && currentScroll < threshold) {
                 element.scrollTo({ top: maxScroll, behavior: 'smooth' });
             }
-        }, 350); // Increased from 80ms to 350ms to slow down the trigger
+        }, 350); 
     }, { passive: true });
 }
 
-applySlingBack(document.getElementById('feed'), 250);
-applySlingBack(document.getElementById('detail-view'), 350);
+applySlingBack(document.getElementById('feed'), 60);
+applySlingBack(document.getElementById('detail-view'), 60);
 
 document.addEventListener("mousemove", e => {
     if (isMobile) return; 
