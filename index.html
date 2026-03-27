@@ -57,7 +57,7 @@
 
         .speaker-grill { width: 45px; height: 4px; background: #1a1a1a; border-radius: 4px; border: 1px solid #222; }
 
-        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 30; background: #000; }
+        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 5; }
         .hero-text { font-size: 20px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 5px; }
         .accent-green { color: #4ade80; }
 
@@ -68,7 +68,6 @@
             text-transform: uppercase; margin-top: 6px; transition: all 0.2s;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             width: fit-content; line-height: 1;
-            position: relative; z-index: 40;
         }
         .btn-reroll .main-label { font-size: 9px; font-weight: 800; }
         
@@ -137,7 +136,7 @@
         
         #detail-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 50; display: none; padding: 0;
+            background: #000; z-index: 110; display: none; padding: 0;
             overflow-y: auto;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
@@ -192,13 +191,13 @@
         }
         .bubble-icon { font-size: 16px; opacity: 0.6; }
 
-        .pass-btn, .shop-btn {
+        .pass-btn, .shop-btn, .view-btn {
             background: #4ade80; color: #000; font-size: 8px; font-weight: 900;
             padding: 3px 6px; border-radius: 6px; text-decoration: none;
             display: inline-block; margin-left: 6px; vertical-align: middle;
             box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); cursor: pointer;
         }
-        .shop-btn { background: #fff; margin-left: 0; margin-top: 2px; }
+        .shop-btn, .view-btn { background: #fff; margin-left: 0; margin-top: 2px; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
 
         .live-dot { width: 5px; height: 5px; background: #ef4444; border-radius: 50%; display: inline-block; margin-right: 3px; animation: signalPulse 1.5s infinite; }
         @keyframes signalPulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
@@ -218,7 +217,7 @@
 
         #gear-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100; display: none; padding: 50px 20px;
+            background: rgba(0,0,0,0.95); z-index: 150; display: none; padding: 50px 20px;
         }
         .gear-item {
             display: flex; align-items: center; justify-content: space-between;
@@ -234,15 +233,16 @@
         @keyframes cloudDrift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
 
         /* --- DONATION BUTTON STYLE --- */
-        .btn-coffee {
-            background: rgba(255, 255, 255, 0.05);
-            color: #888; border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px; border-radius: 12px; font-size: 9px; font-weight: 800;
-            text-transform: uppercase; text-align: center; cursor: pointer;
-            margin: 20px auto 40px; width: 80%; display: block;
-            transition: all 0.2s; text-decoration: none;
+        .btn-donate {
+            position: absolute; bottom: 20px; right: 20px; z-index: 100;
+            background: rgba(0,0,0,0.5); color: #4ade80; padding: 10px 16px; border-radius: 50px;
+            font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px; text-decoration: none;
         }
-        .btn-coffee:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .btn-donate:hover { background: rgba(74, 222, 128, 0.1); }
     </style>
 </head>
 <body>
@@ -252,6 +252,10 @@
 <div class="phone" id="phone">
     <div id="internal-bg-effects"></div>
     <div class="iphone-notch"><div class="speaker-grill"></div></div>
+
+    <a href="https://www.buymeacoffee.com/" target="_blank" class="btn-donate" id="coffee-button">
+        <span>☕ Buy me & my cute girl a coffee</span>
+    </a>
     
     <div id="gear-overlay">
         <div class="close-btn" onclick="closeGear()">✕</div>
@@ -264,7 +268,7 @@
     </div>
 
     <div class="top-nav">
-        <div style="display:flex; flex-direction:column; gap:2px; position: relative; z-index: 20;">
+        <div style="display:flex; flex-direction:column; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span class="compass-icon">🧭</span>
                 <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
@@ -285,7 +289,7 @@ const ADVENTURES = [
     { n: "Spencer Butte", drive: 12, len: "1.7mi", elev: "784ft", diff: "Mid", vibe: "Forest", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "The quickest way to get a 360-degree view of the city.", tags: ["Summit", "Fast"], fact: "The Kalapuya people originally named this peak 'Champ-a te,' which translates to Rattlesnake Mountain.", nature: ["Bobcats", "Great Horned Owls", "Black-tailed Deer"], risk: "Cougar Sightings / Poison Oak", 
       img: "spencersbutte.jpg",
       details: [
-          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Surface", v: "Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Spencer+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 85, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 18", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
@@ -296,7 +300,7 @@ const ADVENTURES = [
     { n: "Silver Falls", drive: 45, len: "7.2mi", elev: "1.1k", diff: "Hard", vibe: "Water", weather: "47°", icon: "🌧️", cls: "weather-rain", desc: "Crown Jewel waterfalls with ten massive drops.", tags: ["Iconic", "Mist"], fact: "You aren't just looking at water—you're walking through 15-million-year-old basalt lava flows.", nature: ["Giant Salamanders", "Bald Eagles", "Salmonberry"], risk: "Slippery Ledges / Elk", 
       img: "silverfallsstatepark.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Surface", v: "Dirt/Rock", i: "🥾" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
+          { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Silver+Falls+State+Park" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Max", i: "👥", isLive: true, pct: 95, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
@@ -307,7 +311,7 @@ const ADVENTURES = [
     { n: "Skinner Butte", drive: 5, len: "0.5mi", elev: "150ft", diff: "Easy", vibe: "Sunset", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "Historic drive-up park with the best sunset views.", tags: ["City", "Rock"], fact: "The butte's west side features 'The Columns,' a massive urban rock climbing wall.", nature: ["Peregrine Falcons", "Ponderosa Pines", "Red Foxes"], risk: "Urban Traffic / Cliffs", 
       img: "skinnersbutte.jpg",
       details: [
-          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Skinner+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 42", i: "🍃", isLive: true, pct: 42, color: "#facc15" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 30, color: "#4ade80" }, 
@@ -318,7 +322,7 @@ const ADVENTURES = [
     { n: "Mt. Pisgah", drive: 15, len: "3.2mi", elev: "1.0k", diff: "Mid", vibe: "Sunset", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Wildflower-heavy slopes and great valley views.", tags: ["Flowers", "Local"], fact: "The summit features a massive bronze relief map pointing to every peak in view.", nature: ["Acorn Woodpeckers", "Camas Lilies", "Osprey"], risk: "Ticks / Rattlesnakes", 
       img: "Pisgah.jpg",
       details: [
-          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Surface", v: "Gravel", i: "🪨" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Mount+Pisgah+Eugene" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
           { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 25", i: "🍃", isLive: true, pct: 25, color: "#4ade80" }, 
           { l: "Parking", v: "80%", i: "🅿️", isLive: true, pct: 80, color: "#facc15" }, 
@@ -329,7 +333,7 @@ const ADVENTURES = [
     { n: "Blue Pool", drive: 75, len: "4.2mi", elev: "200ft", diff: "Mid", vibe: "Water", weather: "45°", icon: "☁️", cls: "weather-cloud", desc: "An impossibly blue volcanic pool that stays 37°F year-round.", tags: ["Volcanic", "Teal"], fact: "The water is so clear it looks 2 feet deep, but it's actually over 30 feet deep.", nature: ["Harlequin Ducks", "Vine Maples", "Black Bears"], risk: "Hypothermia / Rocks", 
       img: "bluepool.jpg",
       details: [
-          { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Surface", v: "Rocky", i: "⛰️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamolitch+Falls+Blue+Pool" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 70, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 90, color: "#ef4444" }, 
@@ -340,7 +344,7 @@ const ADVENTURES = [
     { n: "Sahalie Falls", drive: 70, len: "2.6mi", elev: "400ft", diff: "Easy", vibe: "Water", weather: "44°", icon: "🌧️", cls: "weather-rain", desc: "Roaring 100ft falls on the McKenzie River.", tags: ["River", "Loud"], fact: "Sahalie is a Chinook Jargon word meaning 'high' or 'heavenly.'", nature: ["Chinook Salmon", "Douglas Fir", "River Otters"], risk: "Ice in Winter / Spray", 
       img: "sahaliefalls.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Surface", v: "Paved/Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sahalie+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 50, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
@@ -351,7 +355,7 @@ const ADVENTURES = [
     { n: "Sweet Creek", drive: 60, len: "2.2mi", elev: "150ft", diff: "Easy", vibe: "Forest", weather: "52°", icon: "☁️", cls: "weather-cloud", desc: "Dozens of small cascades along a mossy canyon.", tags: ["Moss", "Family"], fact: "The trail features unique metal catwalks bolted directly into the canyon walls.", nature: ["Newts", "Sword Ferns", "Red Cedars"], risk: "Slippery Metal / Ticks", 
       img: "sweetcreek.jpg",
       details: [
-          { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Surface", v: "Dirt/Metal", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sweet+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 10", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 20, color: "#4ade80" }, 
@@ -362,7 +366,7 @@ const ADVENTURES = [
     { n: "Toketee Falls", drive: 110, len: "0.8mi", elev: "150ft", diff: "Easy", vibe: "Magic", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Columnar basalt cliffs framing a two-tiered waterfall.", tags: ["Basalt", "Geometry"], fact: "The falls are framed by perfectly hexagonal basalt columns formed by cooling lava.", nature: ["Douglas Fir", "Moss", "Osprey"], risk: "Cliff Edges", 
       img: "toketee.jpg",
       details: [
-          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Surface", v: "Dirt/Wood", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Toketee+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 45, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 15", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Parking", v: "50%", i: "🅿️", isLive: true, pct: 50, color: "#facc15" }, 
@@ -373,7 +377,7 @@ const ADVENTURES = [
     { n: "Salt Creek Falls", drive: 65, len: "1.0mi", elev: "200ft", diff: "Easy", vibe: "Water", weather: "42°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's second highest waterfall at a massive 286ft drop.", tags: ["Power", "Huge"], fact: "The sheer volume of water creates a constant mist that sustains its own micro-climate.", nature: ["Mountain Hemlock", "Pika", "Ravens"], risk: "Spray / Ice", 
       img: "saltcreekfalls.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Salt+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
           { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 65, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 20", i: "🍃", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Parking", v: "75%", i: "🅿️", isLive: true, pct: 75, color: "#facc15" }, 
@@ -384,7 +388,7 @@ const ADVENTURES = [
     { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
       img: "abiquafalls.jpg",
       details: [
-          { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Surface", v: "Mud/Rock", i: "🥾" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Abiqua+Falls" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 25, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 14", i: "🍃", isLive: true, pct: 14, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 15, color: "#4ade80" }, 
@@ -395,7 +399,7 @@ const ADVENTURES = [
     { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
       img: "wildhorselake.jpg",
       details: [
-          { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Surface", v: "Scree", i: "⛰️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Wildhorse+Lake+Steens+Mountain" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "Zero", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
@@ -406,7 +410,7 @@ const ADVENTURES = [
     { n: "Watson Falls", drive: 105, len: "1.0mi", elev: "300ft", diff: "Easy", vibe: "Power", weather: "46°", icon: "🌧️", cls: "weather-rain", desc: "The highest waterfall in Southwest Oregon at 272 feet.", tags: ["Basalt", "Mist"], fact: "The falls drop over a massive cliff of Umpqua basalt, creating a heavy wind even on calm days.", nature: ["Douglas Fir", "Sword Ferns", "Pacific Giant Salamander"], risk: "Slippery Bridges", 
       img: "watsonfalls.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Surface", v: "Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Watson+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 12, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 25, color: "#4ade80" }, 
@@ -417,7 +421,7 @@ const ADVENTURES = [
     { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
       img: "multnomahfalls.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
+          { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Multnomah+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
           { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "MAX", i: "👥", isLive: true, pct: 100, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 30", i: "🍃", isLive: true, pct: 30, color: "#facc15" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
@@ -428,7 +432,7 @@ const ADVENTURES = [
     { n: "Proxy Falls", drive: 85, len: "1.6mi", elev: "150ft", diff: "Easy", vibe: "Magical", weather: "44°", icon: "☁️", cls: "weather-cloud", desc: "A veil-like waterfall that disappears into the ground.", tags: ["Lava", "Veil"], fact: "The falls flow over a porous lava field, meaning the water sinks into the earth rather than forming a stream.", nature: ["Mountain Hemlock", "Moss", "Douglas Fir"], risk: "Slippery Scramble", 
       img: "proxyfalls.jpg",
       details: [
-          { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Surface", v: "Dirt/Lava", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Proxy+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 55, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 8, color: "#4ade80" }, 
           { l: "Parking", v: "70%", i: "🅿️", isLive: true, pct: 70, color: "#facc15" }, 
@@ -439,7 +443,7 @@ const ADVENTURES = [
     { n: "Tamawanas Falls", drive: 160, len: "3.4mi", elev: "550ft", diff: "Mid", vibe: "Ancient", weather: "40°", icon: "🌧️", cls: "weather-rain", desc: "A massive curtain falls at the foot of Mt. Hood.", tags: ["Mt Hood", "River"], fact: "The trail follows Cold Spring Creek, providing constant white noise and fresh air.", nature: ["Red Cedar", "Trout", "American Dipper"], risk: "Rock Slides", 
       img: "tamanawasfalls.jpg",
       details: [
-          { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Surface", v: "Rock/Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫" }, 
+          { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamanawas+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫" }, 
           { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 11", i: "🍃", isLive: true, pct: 11, color: "#4ade80" }, 
           { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
@@ -450,7 +454,7 @@ const ADVENTURES = [
     { n: "Smith Rock", drive: 150, len: "3.7mi", elev: "1.2k", diff: "Hard", vibe: "Desert", weather: "62°", icon: "☀️", cls: "weather-sun", desc: "The birthplace of modern American sport climbing.", tags: ["Desert", "Climb"], fact: "Misery Ridge trail is actually shorter than it looks, but the 1,000ft vertical gain is no joke.", nature: ["Golden Eagles", "Mule Deer", "Rattlesnakes"], risk: "Heat / Steepness", 
       img: "smithrock.jpg",
       details: [
-          { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Surface", v: "Dusty", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫" }, 
+          { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Smith+Rock+State+Park" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫" }, 
           { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 80, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 22", i: "🍃", isLive: true, pct: 22, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
@@ -461,7 +465,7 @@ const ADVENTURES = [
     { n: "Owyhee Canyon", drive: 360, len: "6.0mi", elev: "800ft", diff: "Hard", vibe: "Monolith", weather: "68°", icon: "☀️", cls: "weather-sun", desc: "The Grand Canyon of Oregon, remote and rugged.", tags: ["Remote", "Deep"], fact: "This area is one of the least light-polluted places in the lower 48—perfect for Milky Way shots.", nature: ["Pronghorn", "Coyotes", "Sage Grouse"], risk: "Isolation / Mud", 
       img: "owyheecanyon.jpg",
       details: [
-          { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Surface", v: "Sand/Rock", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Owyhee+Canyonlands" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
           { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 2, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 4", i: "🍃", isLive: true, pct: 4, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
@@ -474,6 +478,7 @@ const ADVENTURES = [
 let activeIndices = [];
 let seenIndices = [];
 let currentAdventureIndex = null;
+let firstLoad = true;
 
 function checkMobile() {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
@@ -484,13 +489,21 @@ if (isMobile) {
 }
 
 function reRoll() {
-    let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i));
-    if (unseenIndices.length < 3) {
-        seenIndices = [];
-        unseenIndices = ADVENTURES.map((_, i) => i);
+    if (firstLoad) {
+        // Force the requested locations for the very first load
+        // Index 11: Watson Falls, Index 10: Wildhorse Lake, Index 13: Proxy Falls
+        activeIndices = [11, 10, 13];
+        seenIndices = [...activeIndices];
+        firstLoad = false;
+    } else {
+        let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i));
+        if (unseenIndices.length < 3) {
+            seenIndices = [];
+            unseenIndices = ADVENTURES.map((_, i) => i);
+        }
+        activeIndices = unseenIndices.sort(() => Math.random() - 0.5).slice(0, 3);
+        seenIndices.push(...activeIndices);
     }
-    activeIndices = unseenIndices.sort(() => Math.random() - 0.5).slice(0, 3);
-    seenIndices.push(...activeIndices);
     updateUI(true);
 }
 
@@ -524,6 +537,7 @@ function shareHike(index) {
 
 function openDetail(index) {
     const item = ADVENTURES[index];
+    document.getElementById('coffee-button').style.display = 'none';
     const content = `
         <div class="close-btn" onclick="closeDetail()">✕</div>
         <div class="detail-body">
@@ -534,7 +548,7 @@ function openDetail(index) {
 
             <div class="detail-hero-container" style="background-image: url('${item.img}'); border: 2px solid #4ade80;">
                 <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; padding: 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); border: 2px dashed #4ade80;">
-                    <div style="font-size:8px; font-weight:900; color:#4ade80; margin-bottom:2px; text-transform:uppercase;">✨ Did you know?</div>
+                    <div style="font-size:11px; font-weight:900; color:#4ade80; margin-bottom:2px; text-transform:uppercase;">✨ Did you know?</div>
                     <div style="font-size:10px; line-height:1.2; color:#fff; font-weight: 500;">${item.fact}</div>
                 </div>
             </div>
@@ -546,7 +560,8 @@ function openDetail(index) {
                             <div style="font-size: 9px; font-weight: 800; color: #ccc; text-transform: uppercase; margin-bottom: 2px;">${d.l}</div>
                             <div style="display: flex; align-items: center; font-size: ${d.isLive ? '12px' : '13px'}; font-weight: 700; color: #fff; line-height: 1;">
                                 ${d.isLive ? `<span class="live-dot"></span>` : ''}${d.v}
-                                ${d.link ? `<a href="${d.link}" target="_blank" class="pass-btn">GET PASS</a>` : ''}
+                                ${d.link && !d.view ? `<a href="${d.link}" target="_blank" class="pass-btn">VIEW</a>` : ''}
+                                ${d.view ? `<a href="${d.link}" target="_blank" class="view-btn">VIEW</a>` : ''}
                                 ${d.shop ? `<span onclick="openShop(${index})" class="shop-btn">SHOP</span>` : ''}
                                 ${d.isLive ? `
                                     <div class="live-wrap">
@@ -593,7 +608,10 @@ function openDetail(index) {
     document.getElementById('detail-view').scrollTop = 0;
 }
 
-function closeDetail() { document.getElementById('detail-view').style.display = 'none'; }
+function closeDetail() { 
+    document.getElementById('detail-view').style.display = 'none'; 
+    document.getElementById('coffee-button').style.display = 'flex';
+}
 
 function updateUI(shuffleEffect = false) {
     const feed = document.getElementById('feed');
@@ -607,11 +625,11 @@ function updateUI(shuffleEffect = false) {
                 <div style="display:flex; gap:3px;">${pick.tags.map(t => `<span class="keyword-pill">${t}</span>`).join('')}</div>
             </div>
             <div style="font-size:16px; font-weight:900; margin-bottom: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); position:relative; z-index:5;">${pick.n}</div>
-            <p style="font-size:9px; color:#eee; margin-bottom: 8px; line-height:1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
+            <p style="font-size:10.5px; color:#eee; margin-bottom: 8px; line-height:1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
             
             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap:4px; background:rgba(255,255,255,0.01); backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); padding:6px; border-radius:16px; margin-bottom:8px; border: 1.2px solid rgba(255,255,255,0.25); position:relative; z-index:5;">
-                <div class="stat-box"><span style="font-size:11px;">🥾</span><span class="stat-val">${pick.len}</span></div>
-                <div class="stat-box"><span style="font-size:11px;">⛰️</span><span class="stat-val">${pick.elev}</span></div>
+                <div class="stat-box"><span style="font-size:13px;">🥾</span><span class="stat-val">${pick.len}</span></div>
+                <div class="stat-box"><span style="font-size:13px;">⛰️</span><span class="stat-val">${pick.elev}</span></div>
                 <div class="stat-box">
                     <div style="display:flex; gap:2px; margin-top:3px;">
                         <div class="light green ${pick.diff === 'Easy' ? 'active' : ''}"></div>
@@ -621,17 +639,15 @@ function updateUI(shuffleEffect = false) {
                     <span class="stat-val">${pick.diff}</span>
                 </div>
                 <div class="stat-box" style="border-left: 1px solid rgba(255,255,255,0.12); padding-left: 4px;">
-                    <span class="${pick.cls}" style="font-size:11px;">${pick.icon}</span>
+                    <span class="${pick.cls}" style="font-size:13px;">${pick.icon}</span>
                     <span class="stat-val" style="color:#4ade80;">${pick.weather}</span>
                 </div>
             </div>
             <div class="btn-go" onclick="openDetail(${idx})" style="position:relative; z-index:5;">EXPLORE</div>
-        </div>`}).join('') + `
-        <a href="https://buymeacoffee.com" target="_blank" class="btn-coffee">Buy me & my cute girlfriend a coffee ☕</a>
-        <div id="spacer" style="height: 600px; width: 100%;"></div>`; 
+        </div>`}).join('') + `<div id="spacer" style="height: 600px; width: 100%;"></div>`; 
 }
 
-// --- SNAPPY SLINGBACK BOUNCE SCRIPT ---
+// --- SNAPPY SYMMETRICAL SLINGBACK SCRIPT ---
 function applySlingBack(element, threshold = 150) {
     let scrollTimeout;
     element.addEventListener('scroll', function () {
@@ -641,12 +657,12 @@ function applySlingBack(element, threshold = 150) {
             const currentScroll = element.scrollTop;
             
             if (currentScroll > maxScroll - threshold) {
-                element.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                element.scrollTo({ top: 0, behavior: 'smooth' });
             }
-        }, 50); 
+            else if (currentScroll > 0 && currentScroll < threshold) {
+                element.scrollTo({ top: maxScroll, behavior: 'smooth' });
+            }
+        }, 80); 
     }, { passive: true });
 }
 
