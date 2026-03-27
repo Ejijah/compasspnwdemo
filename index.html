@@ -486,8 +486,6 @@ if (isMobile) {
 
 function reRoll() {
     if (firstLoad) {
-        // Force the requested locations for the very first load
-        // Index 11: Watson Falls, Index 10: Wildhorse Lake, Index 13: Proxy Falls
         activeIndices = [11, 10, 13];
         seenIndices = [...activeIndices];
         firstLoad = false;
@@ -648,6 +646,7 @@ function updateUI(shuffleEffect = false) {
 }
 
 // --- SNAPPY SYMMETRICAL SLINGBACK SCRIPT ---
+// Slowed down the response time to reduce 'snappiness'
 function applySlingBack(element, threshold = 150) {
     let scrollTimeout;
     element.addEventListener('scroll', function () {
@@ -662,7 +661,7 @@ function applySlingBack(element, threshold = 150) {
             else if (currentScroll > 0 && currentScroll < threshold) {
                 element.scrollTo({ top: maxScroll, behavior: 'smooth' });
             }
-        }, 80); 
+        }, 350); // Increased from 80ms to 350ms to slow down the trigger
     }, { passive: true });
 }
 
