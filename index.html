@@ -57,7 +57,7 @@
 
         .speaker-grill { width: 45px; height: 4px; background: #1a1a1a; border-radius: 4px; border: 1px solid #222; }
 
-        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 5; }
+        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 30; background: #000; }
         .hero-text { font-size: 20px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 5px; }
         .accent-green { color: #4ade80; }
 
@@ -68,6 +68,7 @@
             text-transform: uppercase; margin-top: 6px; transition: all 0.2s;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             width: fit-content; line-height: 1;
+            position: relative; z-index: 40;
         }
         .btn-reroll .main-label { font-size: 9px; font-weight: 800; }
         
@@ -87,8 +88,9 @@
         .compass-icon { font-size: 20px; animation: compassFloat 3s ease-in-out infinite; display: inline-block; }
 
         .glass-panel {
-            background: #000; 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 2px solid #4ade80; border-radius: 24px;
             padding: 12px; margin-bottom: 8px; position: relative; z-index: 2; overflow: hidden;
         }
 
@@ -230,6 +232,17 @@
         @keyframes sunSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rainDrop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
         @keyframes cloudDrift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+
+        /* --- DONATION BUTTON STYLE --- */
+        .btn-coffee {
+            background: rgba(255, 255, 255, 0.05);
+            color: #888; border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px; border-radius: 12px; font-size: 9px; font-weight: 800;
+            text-transform: uppercase; text-align: center; cursor: pointer;
+            margin: 20px auto 40px; width: 80%; display: block;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .btn-coffee:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
     </style>
 </head>
 <body>
@@ -251,7 +264,7 @@
     </div>
 
     <div class="top-nav">
-        <div style="display:flex; flex-direction:column; gap:2px;">
+        <div style="display:flex; flex-direction:column; gap:2px; position: relative; z-index: 20;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span class="compass-icon">🧭</span>
                 <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
@@ -298,7 +311,7 @@ const ADVENTURES = [
           { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 42", i: "🍃", isLive: true, pct: 42, color: "#facc15" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 30, color: "#4ade80" }, 
-          { l: "Toilets", v: "Near", i: "🚻" }, { l: "Gear", v: "", i: "👕", shop: true }
+          { l: "Toilets", v: "Near", i: "🚻" }, { l: "Gear", v: "", i: "🕶️", shop: true }
       ],
       gear: [{ n: "Polarized Shades", p: "$65", i: "🕶️" }, { n: "Rumpl Blanket", p: "$99", i: " Couch" }, { n: "Portable Speaker", p: "$45", i: "🔊" }, { n: "Osprey Daylite", p: "$60", i: "🎒" }, { n: "Insulated Tumbler", p: "$25", i: "☕" }]
     },
@@ -408,7 +421,7 @@ const ADVENTURES = [
           { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "MAX", i: "👥", isLive: true, pct: 100, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 30", i: "🍃", isLive: true, pct: 30, color: "#facc15" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "👕", shop: true }
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "👟", shop: true }
       ],
       gear: [{ n: "Walking Shoes", p: "$120", i: "👟" }, { n: "Windbreaker", p: "$110", i: "🧥" }, { n: "Souvenir Cap", p: "$25", i: "🧢" }, { n: "Phone Tether", p: "$15", i: "📱" }, { n: "Refillable Bottle", p: "$30", i: "💧" }]
     },
@@ -519,8 +532,8 @@ function openDetail(index) {
                 <p style="color:#888; font-size:12px; line-height:1.2;">${item.desc}</p>
             </div>
 
-            <div class="detail-hero-container" style="background-image: url('${item.img}');">
-                <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; padding: 12px; border-radius: 14px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);">
+            <div class="detail-hero-container" style="background-image: url('${item.img}'); border: 2px solid #4ade80;">
+                <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; padding: 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); border: 2px dashed #4ade80;">
                     <div style="font-size:8px; font-weight:900; color:#4ade80; margin-bottom:2px; text-transform:uppercase;">✨ Did you know?</div>
                     <div style="font-size:10px; line-height:1.2; color:#fff; font-weight: 500;">${item.fact}</div>
                 </div>
@@ -528,9 +541,9 @@ function openDetail(index) {
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 15px;">
                 ${item.details.map(d => `
-                    <div class="info-bubble">
+                    <div class="info-bubble" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.18);">
                         <div style="display: flex; flex-direction: column; width: 100%;">
-                            <div style="font-size: 9px; font-weight: 800; color: #777; text-transform: uppercase; margin-bottom: 2px;">${d.l}</div>
+                            <div style="font-size: 9px; font-weight: 800; color: #ccc; text-transform: uppercase; margin-bottom: 2px;">${d.l}</div>
                             <div style="display: flex; align-items: center; font-size: ${d.isLive ? '12px' : '13px'}; font-weight: 700; color: #fff; line-height: 1;">
                                 ${d.isLive ? `<span class="live-dot"></span>` : ''}${d.v}
                                 ${d.link ? `<a href="${d.link}" target="_blank" class="pass-btn">GET PASS</a>` : ''}
@@ -547,7 +560,7 @@ function openDetail(index) {
                 `).join('')}
             </div>
 
-            <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+            <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 18px; border: 1.5px solid rgba(74, 222, 128, 0.3); margin-bottom: 15px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
                         <div style="font-size: 9px; font-weight: 800; color: #888; text-transform: uppercase; margin-bottom: 4px;">Wildlife & Plants</div>
@@ -590,12 +603,13 @@ function updateUI(shuffleEffect = false) {
         <div class="glass-panel" style="${shuffleEffect ? `animation: springUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: ${i * 0.15}s; opacity: 0;` : ''}">
             <div class="adventure-texture" style="background-image: url('${pick.img}')"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; position:relative; z-index:5;">
-                <div style="color:#4ade80; font-size:10px; font-weight:800; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 6px;">${pick.drive} min drive</div>
+                <div style="color:#4ade80; font-size:10px; font-weight:800; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 6px;">${pick.drive} min drive</div>
                 <div style="display:flex; gap:3px;">${pick.tags.map(t => `<span class="keyword-pill">${t}</span>`).join('')}</div>
             </div>
             <div style="font-size:16px; font-weight:900; margin-bottom: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); position:relative; z-index:5;">${pick.n}</div>
             <p style="font-size:9px; color:#eee; margin-bottom: 8px; line-height:1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap:4px; background:rgba(0,0,0,0.4); backdrop-filter: blur(8px); padding:6px; border-radius:16px; margin-bottom:8px; border: 1px solid rgba(255,255,255,0.15); position:relative; z-index:5;">
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap:4px; background:rgba(255,255,255,0.01); backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); padding:6px; border-radius:16px; margin-bottom:8px; border: 1.2px solid rgba(255,255,255,0.25); position:relative; z-index:5;">
                 <div class="stat-box"><span style="font-size:11px;">🥾</span><span class="stat-val">${pick.len}</span></div>
                 <div class="stat-box"><span style="font-size:11px;">⛰️</span><span class="stat-val">${pick.elev}</span></div>
                 <div class="stat-box">
@@ -606,13 +620,15 @@ function updateUI(shuffleEffect = false) {
                     </div>
                     <span class="stat-val">${pick.diff}</span>
                 </div>
-                <div class="stat-box" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 4px;">
+                <div class="stat-box" style="border-left: 1px solid rgba(255,255,255,0.12); padding-left: 4px;">
                     <span class="${pick.cls}" style="font-size:11px;">${pick.icon}</span>
                     <span class="stat-val" style="color:#4ade80;">${pick.weather}</span>
                 </div>
             </div>
             <div class="btn-go" onclick="openDetail(${idx})" style="position:relative; z-index:5;">EXPLORE</div>
-        </div>`}).join('') + `<div id="spacer" style="height: 600px; width: 100%;"></div>`; 
+        </div>`}).join('') + `
+        <a href="https://buymeacoffee.com" target="_blank" class="btn-coffee">Buy me & my cute girlfriend a coffee ☕</a>
+        <div id="spacer" style="height: 600px; width: 100%;"></div>`; 
 }
 
 // --- SNAPPY SLINGBACK BOUNCE SCRIPT ---
