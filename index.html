@@ -57,9 +57,10 @@
 
         .speaker-grill { width: 45px; height: 4px; background: #1a1a1a; border-radius: 4px; border: 1px solid #222; }
 
-        /* FIXED SPACING IN TOP NAV */
-        .top-nav { padding: 10px 20px 8px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 5; }
-        .hero-text { font-size: 18px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 0; }
+        .top-nav { padding: 10px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 5; }
+        
+        /* ADJUSTED MARGIN-TOP FOR ALIGNMENT */
+        .hero-text { font-size: 18px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 14px; }
         .accent-green { color: #4ade80; }
 
         .btn-reroll {
@@ -85,7 +86,6 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-2px) rotate(5deg); }
         }
-        /* MOUNTAIN EMOJI SIZE REDUCED */
         .compass-icon { 
             font-size: 35px; 
             animation: compassFloat 3s ease-in-out infinite; 
@@ -130,7 +130,7 @@
 
         #feed { 
             padding: 0 15px; 
-            height: calc(100% - 100px); 
+            height: calc(100% - 110px); 
             overflow-y: auto; 
             position: relative; 
             z-index: 5; 
@@ -239,7 +239,6 @@
         @keyframes rainDrop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
         @keyframes cloudDrift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
 
-        /* --- DONATION BUTTON STYLE --- */
         .btn-donate {
             background: rgba(0,0,0,0.5); color: #4ade80; padding: 10px 16px; border-radius: 50px;
             font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
@@ -289,7 +288,7 @@
 
 <script>
 const ADVENTURES = [
-    { n: "Spencer Butte", drive: 12, len: "1.7mi", elev: "784ft", diff: "Mid", vibe: "Forest", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "The quickest way to get a 360-degree view of the city.", tags: ["Summit", "Fast"], fact: "The Kalapuya people originally named this peak 'Champ-a te,' which translates to Rattlesnake Mountain.", nature: ["Bobcats", "Great Horned Owls", "Black-tailed Deer"], risk: "Cougar Sightings / Poison Oak", 
+    { n: "Spencer Butte", drive: 12, len: "1.7mi", elev: "784ft", diff: "Mid", vibe: "Forest", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "The quickest way to get a 360-degree view of the city.", tags: ["Summit", "Fast", "Eugene", "Dog Friendly"], fact: "The Kalapuya people originally named this peak 'Champ-a te,' which translates to Rattlesnake Mountain.", nature: ["Bobcats", "Great Horned Owls", "Black-tailed Deer"], risk: "Cougar Sightings / Poison Oak", 
       img: "spencersbutte.jpg",
       details: [
           { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Spencer+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -300,7 +299,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Salomon Trail Shoes", p: "$140", i: "👟" }, { n: "Hydro Flask 24oz", p: "$35", i: "💧" }, { n: "Smartwool Socks", p: "$24", i: "🧦" }, { n: "Black Diamond Poles", p: "$120", i: "🦯" }, { n: "PNW Sun Hat", p: "$28", i: "🧢" }]
     },
-    { n: "Silver Falls", drive: 45, len: "7.2mi", elev: "1.1k", diff: "Hard", vibe: "Water", weather: "47°", icon: "🌧️", cls: "weather-rain", desc: "Crown Jewel waterfalls with ten massive drops.", tags: ["Iconic", "Mist"], fact: "You aren't just looking at water—you're walking through 15-million-year-old basalt lava flows.", nature: ["Giant Salamanders", "Bald Eagles", "Salmonberry"], risk: "Slippery Ledges / Elk", 
+    { n: "Silver Falls", drive: 45, len: "7.2mi", elev: "1.1k", diff: "Hard", vibe: "Water", weather: "47°", icon: "🌧️", cls: "weather-rain", desc: "Crown Jewel waterfalls with ten massive drops.", tags: ["Iconic", "Mist", "Waterfall"], fact: "You aren't just looking at water—you're walking through 15-million-year-old basalt lava flows.", nature: ["Giant Salamanders", "Bald Eagles", "Salmonberry"], risk: "Slippery Ledges / Elk", 
       img: "silverfallsstatepark.jpg",
       details: [
           { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Silver+Falls+State+Park" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
@@ -311,7 +310,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Arc'teryx Rain Shell", p: "$400", i: "🧥" }, { n: "Gore-Tex Boots", p: "$220", i: "🥾" }, { n: "Exospikes Traction", p: "$65", i: "⛓️" }, { n: "Waterproof Map", p: "$15", i: "🗺️" }, { n: "Osprey Rain Cover", p: "$25", i: "🎒" }]
     },
-    { n: "Skinner Butte", drive: 5, len: "0.5mi", elev: "150ft", diff: "Easy", vibe: "Sunset", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "Historic drive-up park with the best sunset views.", tags: ["City", "Rock"], fact: "The butte's west side features 'The Columns,' a massive urban rock climbing wall.", nature: ["Peregrine Falcons", "Ponderosa Pines", "Red Foxes"], risk: "Urban Traffic / Cliffs", 
+    { n: "Skinner Butte", drive: 5, len: "0.5mi", elev: "150ft", diff: "Easy", vibe: "Sunset", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "Historic drive-up park with the best sunset views.", tags: ["City", "Rock", "Eugene", "Dog Friendly"], fact: "The butte's west side features 'The Columns,' a massive urban rock climbing wall.", nature: ["Peregrine Falcons", "Ponderosa Pines", "Red Foxes"], risk: "Urban Traffic / Cliffs", 
       img: "skinnersbutte.jpg",
       details: [
           { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Skinner+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -322,7 +321,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Polarized Shades", p: "$65", i: "🕶️" }, { n: "Rumpl Blanket", p: "$99", i: " Couch" }, { n: "Portable Speaker", p: "$45", i: "🔊" }, { n: "Osprey Daylite", p: "$60", i: "🎒" }, { n: "Insulated Tumbler", p: "$25", i: "☕" }]
     },
-    { n: "Mt. Pisgah", drive: 15, len: "3.2mi", elev: "1.0k", diff: "Mid", vibe: "Sunset", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Wildflower-heavy slopes and great valley views.", tags: ["Flowers", "Local"], fact: "The summit features a massive bronze relief map pointing to every peak in view.", nature: ["Acorn Woodpeckers", "Camas Lilies", "Osprey"], risk: "Ticks / Rattlesnakes", 
+    { n: "Mt. Pisgah", drive: 15, len: "3.2mi", elev: "1.0k", diff: "Mid", vibe: "Sunset", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Wildflower-heavy slopes and great valley views.", tags: ["Flowers", "Local", "Eugene", "Dog Friendly"], fact: "The summit features a massive bronze relief map pointing to every peak in view.", nature: ["Acorn Woodpeckers", "Camas Lilies", "Osprey"], risk: "Ticks / Rattlesnakes", 
       img: "Pisgah.jpg",
       details: [
           { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Mount+Pisgah+Eugene" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
@@ -333,7 +332,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Patagonia Windbreaker", p: "$129", i: "🧥" }, { n: "Hiking Trousers", p: "$90", i: "👖" }, { n: "Energy Gels (Box)", p: "$30", i: "⚡" }, { n: "Sunscreen Stick", p: "$15", i: "🧴" }, { n: "Buff Neck Gaiter", p: "$20", i: "🧣" }]
     },
-    { n: "Blue Pool", drive: 75, len: "4.2mi", elev: "200ft", diff: "Mid", vibe: "Water", weather: "45°", icon: "☁️", cls: "weather-cloud", desc: "An impossibly blue volcanic pool that stays 37°F year-round.", tags: ["Volcanic", "Teal"], fact: "The water is so clear it looks 2 feet deep, but it's actually over 30 feet deep.", nature: ["Harlequin Ducks", "Vine Maples", "Black Bears"], risk: "Hypothermia / Rocks", 
+    { n: "Blue Pool", drive: 75, len: "4.2mi", elev: "200ft", diff: "Mid", vibe: "Water", weather: "45°", icon: "☁️", cls: "weather-cloud", desc: "An impossibly blue volcanic pool that stays 37°F year-round.", tags: ["Volcanic", "Teal", "Water", "Waterfall"], fact: "The water is so clear it looks 2 feet deep, but it's actually over 30 feet deep.", nature: ["Harlequin Ducks", "Vine Maples", "Black Bears"], risk: "Hypothermia / Rocks", 
       img: "bluepool.jpg",
       details: [
           { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamolitch+Falls+Blue+Pool" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
@@ -344,7 +343,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Danner Mountain 600", p: "$210", i: "🥾" }, { n: "LifeStraw Bottle", p: "$40", i: "💧" }, { n: "Emergency Blanket", p: "$8", i: "⛺" }, { n: "Bear Spray", p: "$50", i: "💨" }, { n: "Topo Map Compass", p: "$25", i: "🧭" }]
     },
-    { n: "Sahalie Falls", drive: 70, len: "2.6mi", elev: "400ft", diff: "Easy", vibe: "Water", weather: "44°", icon: "🌧️", cls: "weather-rain", desc: "Roaring 100ft falls on the McKenzie River.", tags: ["River", "Loud"], fact: "Sahalie is a Chinook Jargon word meaning 'high' or 'heavenly.'", nature: ["Chinook Salmon", "Douglas Fir", "River Otters"], risk: "Ice in Winter / Spray", 
+    { n: "Sahalie Falls", drive: 70, len: "2.6mi", elev: "400ft", diff: "Easy", vibe: "Water", weather: "44°", icon: "🌧️", cls: "weather-rain", desc: "Roaring 100ft falls on the McKenzie River.", tags: ["River", "Loud", "Waterfall", "Dog Friendly"], fact: "Sahalie is a Chinook Jargon word meaning 'high' or 'heavenly.'", nature: ["Chinook Salmon", "Douglas Fir", "River Otters"], risk: "Ice in Winter / Spray", 
       img: "sahaliefalls.jpg",
       details: [
           { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sahalie+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -355,7 +354,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Rain Jacket", p: "$110", i: "🧥" }, { n: "Waterproof Shoes", p: "$150", i: "👟" }, { n: "Camera Strap", p: "$35", i: "📷" }, { n: "Hand Warmers", p: "$5", i: "🔥" }, { n: "Hiking Pack", p: "$80", i: "🎒" }]
     },
-    { n: "Sweet Creek", drive: 60, len: "2.2mi", elev: "150ft", diff: "Easy", vibe: "Forest", weather: "52°", icon: "☁️", cls: "weather-cloud", desc: "Dozens of small cascades along a mossy canyon.", tags: ["Moss", "Family"], fact: "The trail features unique metal catwalks bolted directly into the canyon walls.", nature: ["Newts", "Sword Ferns", "Red Cedars"], risk: "Slippery Metal / Ticks", 
+    { n: "Sweet Creek", drive: 60, len: "2.2mi", elev: "150ft", diff: "Easy", vibe: "Forest", weather: "52°", icon: "☁️", cls: "weather-cloud", desc: "Dozens of small cascades along a mossy canyon.", tags: ["Moss", "Family", "Waterfall", "Dog Friendly"], fact: "The trail features unique metal catwalks bolted directly into the canyon walls.", nature: ["Newts", "Sword Ferns", "Red Cedars"], risk: "Slippery Metal / Ticks", 
       img: "sweetcreek.jpg",
       details: [
           { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sweet+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -366,7 +365,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Wool Base Layer", p: "$75", i: "👕" }, { n: "Binoculars", p: "$95", i: "🔭" }, { n: "First Aid Kit", p: "$25", i: "🩹" }, { n: "Protein Bars", p: "$15", i: "🍫" }, { n: "Hat", p: "$20", i: "🧢" }]
     },
-    { n: "Toketee Falls", drive: 110, len: "0.8mi", elev: "150ft", diff: "Easy", vibe: "Magic", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Columnar basalt cliffs framing a two-tiered waterfall.", tags: ["Basalt", "Geometry"], fact: "The falls are framed by perfectly hexagonal basalt columns formed by cooling lava.", nature: ["Douglas Fir", "Moss", "Osprey"], risk: "Cliff Edges", 
+    { n: "Toketee Falls", drive: 110, len: "0.8mi", elev: "150ft", diff: "Easy", vibe: "Magic", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Columnar basalt cliffs framing a two-tiered waterfall.", tags: ["Basalt", "Geometry", "Waterfall", "Dog Friendly"], fact: "The falls are framed by perfectly hexagonal basalt columns formed by cooling lava.", nature: ["Douglas Fir", "Moss", "Osprey"], risk: "Cliff Edges", 
       img: "toketee.jpg",
       details: [
           { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Toketee+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -377,7 +376,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Wide Angle Lens", p: "$450", i: "📷" }, { n: "Sturdy Tripod", p: "$120", i: "🔭" }, { n: "Hiking Boots", p: "$160", i: "🥾" }, { n: "Rain Shell", p: "$100", i: "🧥" }, { n: "Daypack", p: "$65", i: "🎒" }]
     },
-    { n: "Salt Creek Falls", drive: 65, len: "1.0mi", elev: "200ft", diff: "Easy", vibe: "Water", weather: "42°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's second highest waterfall at a massive 286ft drop.", tags: ["Power", "Huge"], fact: "The sheer volume of water creates a constant mist that sustains its own micro-climate.", nature: ["Mountain Hemlock", "Pika", "Ravens"], risk: "Spray / Ice", 
+    { n: "Salt Creek Falls", drive: 65, len: "1.0mi", elev: "200ft", diff: "Easy", vibe: "Water", weather: "42°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's second highest waterfall at a massive 286ft drop.", tags: ["Power", "Huge", "Waterfall", "Dog Friendly"], fact: "The sheer volume of water creates a constant mist that sustains its own micro-climate.", nature: ["Mountain Hemlock", "Pika", "Ravens"], risk: "Spray / Ice", 
       img: "saltcreekfalls.jpg",
       details: [
           { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Salt+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
@@ -388,7 +387,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Insulated Jacket", p: "$180", i: "🧥" }, { n: "Gore-Tex Shell", p: "$250", i: "🧥" }, { n: "Gloves", p: "$30", i: "🧤" }, { n: "Camera Rain Cover", p: "$20", i: "🌧️" }, { n: "Heavy Socks", p: "$25", i: "🧦" }]
     },
-    { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
+    { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal", "Waterfall", "Silverton"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
       img: "abiquafalls.jpg",
       details: [
           { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Abiqua+Falls" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -399,7 +398,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Work Gloves", p: "$15", i: "🧤" }, { n: "High Traction Boots", p: "$210", i: "🥾" }, { n: "Dry Bag", p: "$35", i: "🎒" }, { n: "Towel", p: "$20", i: "🧣" }, { n: "Headlamp", p: "$40", i: "🔦" }]
     },
-    { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
+    { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial", "Desert", "Dog Friendly"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
       img: "wildhorselake.jpg",
       details: [
           { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Wildhorse+Lake+Steens+Mountain" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -410,7 +409,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Down Puffy", p: "$220", i: "🧥" }, { n: "Trekking Poles", p: "$130", i: "🦯" }, { n: "Emergency Bivvy", p: "$25", i: "⛺" }, { n: "Satellite Messenger", p: "$350", i: "📡" }, { n: "Filter Straw", p: "$25", i: "💧" }]
     },
-    { n: "Watson Falls", drive: 105, len: "1.0mi", elev: "300ft", diff: "Easy", vibe: "Power", weather: "46°", icon: "🌧️", cls: "weather-rain", desc: "The highest waterfall in Southwest Oregon at 272 feet.", tags: ["Basalt", "Mist"], fact: "The falls drop over a massive cliff of Umpqua basalt, creating a heavy wind even on calm days.", nature: ["Douglas Fir", "Sword Ferns", "Pacific Giant Salamander"], risk: "Slippery Bridges", 
+    { n: "Watson Falls", drive: 105, len: "1.0mi", elev: "300ft", diff: "Easy", vibe: "Power", weather: "46°", icon: "🌧️", cls: "weather-rain", desc: "The highest waterfall in Southwest Oregon at 272 feet.", tags: ["Basalt", "Mist", "Waterfall", "Dog Friendly"], fact: "The falls drop over a massive cliff of Umpqua basalt, creating a heavy wind even on calm days.", nature: ["Douglas Fir", "Sword Ferns", "Pacific Giant Salamander"], risk: "Slippery Bridges", 
       img: "watsonfalls.jpg",
       details: [
           { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Watson+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
@@ -421,7 +420,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Rain Poncho", p: "$15", i: "🧥" }, { n: "Sturdy Sandals", p: "$100", i: "👡" }, { n: "Camera Lens Cloth", p: "$10", i: "🧼" }, { l: "Lightweight Shell", p: "$90", i: "🧥" }, { n: "Waterproof Watch", p: "$60", i: "⌚" }]
     },
-    { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
+    { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous", "Waterfall", "Dog Friendly"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
       img: "multnomahfalls.jpg",
       details: [
           { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Multnomah+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
@@ -432,7 +431,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Walking Shoes", p: "$120", i: "👟" }, { n: "Windbreaker", p: "$110", i: "🧥" }, { n: "Souvenir Cap", p: "$25", i: "🧢" }, { n: "Phone Tether", p: "$15", i: "📱" }, { n: "Refillable Bottle", p: "$30", i: "💧" }]
     },
-    { n: "Proxy Falls", drive: 85, len: "1.6mi", elev: "150ft", diff: "Easy", vibe: "Magical", weather: "44°", icon: "☁️", cls: "weather-cloud", desc: "A veil-like waterfall that disappears into the ground.", tags: ["Lava", "Veil"], fact: "The falls flow over a porous lava field, meaning the water sinks into the earth rather than forming a stream.", nature: ["Mountain Hemlock", "Moss", "Douglas Fir"], risk: "Slippery Scramble", 
+    { n: "Proxy Falls", drive: 85, len: "1.6mi", elev: "150ft", diff: "Easy", vibe: "Magical", weather: "44°", icon: "☁️", cls: "weather-cloud", desc: "A veil-like waterfall that disappears into the ground.", tags: ["Lava", "Veil", "Waterfall", "Dog Friendly"], fact: "The falls flow over a porous lava field, meaning the water sinks into the earth rather than forming a stream.", nature: ["Mountain Hemlock", "Moss", "Douglas Fir"], risk: "Slippery Scramble", 
       img: "proxyfalls.jpg",
       details: [
           { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Proxy+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
@@ -443,7 +442,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Merrell Moabs", p: "$145", i: "🥾" }, { n: "Wide Rim Hat", p: "$45", i: "🤠" }, { n: "Daylite Plus", p: "$75", i: "🎒" }, { n: "Wool Blend Socks", p: "$22", i: "🧦" }, { n: "Camera Lens Clip", p: "$50", i: "📸" }]
     },
-    { n: "Tamawanas Falls", drive: 160, len: "3.4mi", elev: "550ft", diff: "Mid", vibe: "Ancient", weather: "40°", icon: "🌧️", cls: "weather-rain", desc: "A massive curtain falls at the foot of Mt. Hood.", tags: ["Mt Hood", "River"], fact: "The trail follows Cold Spring Creek, providing constant white noise and fresh air.", nature: ["Red Cedar", "Trout", "American Dipper"], risk: "Rock Slides", 
+    { n: "Tamawanas Falls", drive: 160, len: "3.4mi", elev: "550ft", diff: "Mid", vibe: "Ancient", weather: "40°", icon: "🌧️", cls: "weather-rain", desc: "A massive curtain falls at the foot of Mt. Hood.", tags: ["Mt Hood", "River", "Waterfall", "Dog Friendly"], fact: "The trail follows Cold Spring Creek, providing constant white noise and fresh air.", nature: ["Red Cedar", "Trout", "American Dipper"], risk: "Rock Slides", 
       img: "tamanawasfalls.jpg",
       details: [
           { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamanawas+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫" }, 
@@ -454,7 +453,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Thermal Layer", p: "$85", i: "👕" }, { n: "Fleece Hoody", p: "$120", i: "🧥" }, { n: "Beanies", p: "$20", i: "🧢" }, { n: "Traction Spikes", p: "$70", i: "⛸️" }, { n: "Small Dry Bag", p: "$25", i: "🎒" }]
     },
-    { n: "Smith Rock", drive: 150, len: "3.7mi", elev: "1.2k", diff: "Hard", vibe: "Desert", weather: "62°", icon: "☀️", cls: "weather-sun", desc: "The birthplace of modern American sport climbing.", tags: ["Desert", "Climb"], fact: "Misery Ridge trail is actually shorter than it looks, but the 1,000ft vertical gain is no joke.", nature: ["Golden Eagles", "Mule Deer", "Rattlesnakes"], risk: "Heat / Steepness", 
+    { n: "Smith Rock", drive: 150, len: "3.7mi", elev: "1.2k", diff: "Hard", vibe: "Desert", weather: "62°", icon: "☀️", cls: "weather-sun", desc: "The birthplace of modern American sport climbing.", tags: ["Desert", "Climb", "Dog Friendly", "Bend"], fact: "Misery Ridge trail is actually shorter than it looks, but the 1,000ft vertical gain is no joke.", nature: ["Golden Eagles", "Mule Deer", "Rattlesnakes"], risk: "Heat / Steepness", 
       img: "smithrock.jpg",
       details: [
           { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Smith+Rock+State+Park" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫" }, 
@@ -465,7 +464,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Hydration Pack", p: "$110", i: "🎒" }, { n: "Sun Shirt", p: "$65", i: "👕" }, { n: "Trekking Poles", p: "$140", i: "🦯" }, { n: "Salt Tabs", p: "$12", i: "🧂" }, { n: "Hiking Trousers", p: "$95", i: "👖" }]
     },
-    { n: "Owyhee Canyon", drive: 360, len: "6.0mi", elev: "800ft", diff: "Hard", vibe: "Monolith", weather: "68°", icon: "☀️", cls: "weather-sun", desc: "The Grand Canyon of Oregon, remote and rugged.", tags: ["Remote", "Deep"], fact: "This area is one of the least light-polluted places in the lower 48—perfect for Milky Way shots.", nature: ["Pronghorn", "Coyotes", "Sage Grouse"], risk: "Isolation / Mud", 
+    { n: "Owyhee Canyon", drive: 360, len: "6.0mi", elev: "800ft", diff: "Hard", vibe: "Monolith", weather: "68°", icon: "☀️", cls: "weather-sun", desc: "The Grand Canyon of Oregon, remote and rugged.", tags: ["Remote", "Deep", "Desert", "Dog Friendly"], fact: "This area is one of the least light-polluted places in the lower 48—perfect for Milky Way shots.", nature: ["Pronghorn", "Coyotes", "Sage Grouse"], risk: "Isolation / Mud", 
       img: "owyheecanyon.jpg",
       details: [
           { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Owyhee+Canyonlands" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
