@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compass PNW | V1.2.1</title>
+    <title>UnlockPNW | V1.2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -80,11 +80,11 @@
             animation: labelPulse 2s infinite ease-in-out;
         }
         
-        @keyframes compassFloat {
+        @keyframes mountainFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-2px) rotate(5deg); }
         }
-        .compass-icon { font-size: 20px; animation: compassFloat 3s ease-in-out infinite; display: inline-block; }
+        .mountain-icon { font-size: 23px; animation: mountainFloat 3s ease-in-out infinite; display: inline-block; }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03); 
@@ -266,8 +266,8 @@
     <div class="top-nav">
         <div style="display:flex; flex-direction:column; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
-                <span class="compass-icon">🧭</span>
-                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
+                <span class="mountain-icon">🏔️</span>
+                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">UnlockPNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
             </div>
             <div class="btn-reroll" onclick="reRoll()">
                 <span class="main-label">Explore More</span>
@@ -390,7 +390,7 @@ const ADVENTURES = [
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "🧤", shop: true }
       ],
-      gear: [{ n: "Work Gloves", p: "$15", i: "🧤" }, { n: "High Traction Boots", p: "$210", i: "🥾" }, { n: "Dry Bag", p: "$35", i: "🎒" }, { n: "Towel", p: "$20", i: "🧣" }, { n: "Headlamp", p: "$40", i: "🔦" }]
+      gear: [{ n: "Work gloves", p: "$15", i: "🧤" }, { n: "High traction boots", p: "$210", i: "🥾" }, { n: "Dry bag", p: "$35", i: "🎒" }, { n: "Towel", p: "$20", i: "🧣" }, { n: "Headlamp", p: "$40", i: "🔦" }]
     },
     { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
       img: "wildhorselake.jpg",
@@ -467,7 +467,7 @@ const ADVENTURES = [
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "📡", shop: true }
       ],
-      gear: [{ n: "GPS Messenger", p: "$350", i: "📡" }, { n: "Extra Fuel Can", p: "$45", i: "⛽" }, { n: "Full Spare Tire", p: "$200", i: "🛞" }, { n: "Galvanized Water Tank", p: "$40", i: "💧" }, { n: "First Aid XL", p: "$60", i: "🩹" }]
+      gear: [{ n: "GPS messenger", p: "$350", i: "📡" }, { n: "Extra fuel can", p: "$45", i: "⛽" }, { n: "Full spare tire", p: "$200", i: "🛞" }, { n: "Galvanized water tank", p: "$40", i: "💧" }, { n: "First Aid XL", p: "$60", i: "🩹" }]
     }
 ];
 
@@ -524,8 +524,8 @@ function closeGear() { document.getElementById('gear-overlay').style.display = '
 
 function shareHike(index) {
     const item = ADVENTURES[index];
-    const text = `Check out ${item.n} on Compass PNW!`;
-    if (navigator.share) navigator.share({ title: 'Compass PNW', text: text });
+    const text = `Check out ${item.n} on UnlockPNW!`;
+    if (navigator.share) navigator.share({ title: 'UnlockPNW', text: text });
     else alert("Shared: " + text);
 }
 
@@ -646,7 +646,6 @@ function updateUI(shuffleEffect = false) {
 }
 
 // --- SLINGBACK SCRIPT ---
-// Reduced threshold to limit how far down the user can scroll before snapping back
 function applySlingBack(element, threshold = 60) {
     let scrollTimeout;
     element.addEventListener('scroll', function () {
