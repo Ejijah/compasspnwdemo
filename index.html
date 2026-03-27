@@ -186,9 +186,9 @@
         .info-bubble {
             background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 14px; 
             border: 1px solid rgba(255,255,255,0.1); display: flex; 
-            justify-content: space-between; align-items: center; height: 44px;
+            justify-content: space-between; align-items: center; height: 52px;
         }
-        .bubble-icon { font-size: 14px; opacity: 0.6; }
+        .bubble-icon { font-size: 16px; opacity: 0.6; }
 
         .pass-btn, .shop-btn {
             background: #4ade80; color: #000; font-size: 8px; font-weight: 900;
@@ -200,9 +200,9 @@
 
         .live-dot { width: 5px; height: 5px; background: #ef4444; border-radius: 50%; display: inline-block; margin-right: 3px; animation: signalPulse 1.5s infinite; }
         @keyframes signalPulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .mini-bar-bg { width: 25px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; }
-        .mini-bar-fill { height: 100%; border-radius: 2px; }
-        .live-timestamp { font-size: 5.5px; color: #666; font-weight: 900; text-transform: uppercase; margin-left: 3px; white-space: nowrap; }
+        .mini-bar-bg { width: 35px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 2.5px; }
+        .mini-bar-fill { height: 100%; border-radius: 2.5px; }
+        .live-timestamp { font-size: 6.5px; color: #888; font-weight: 900; text-transform: uppercase; margin-left: 3px; white-space: nowrap; }
         
         @keyframes liveFadeIn {
             from { opacity: 0; transform: translateY(5px); }
@@ -211,7 +211,7 @@
         .live-wrap { 
             display: inline-flex; flex-direction: column; align-items: flex-start; 
             animation: liveFadeIn 0.5s ease-out 0.4s both;
-            gap: 2px; margin-left: 8px; vertical-align: middle;
+            gap: 3px; margin-left: 10px; vertical-align: middle;
         }
 
         #gear-overlay {
@@ -530,8 +530,8 @@ function openDetail(index) {
                 ${item.details.map(d => `
                     <div class="info-bubble">
                         <div style="display: flex; flex-direction: column; width: 100%;">
-                            <div style="font-size: 8px; font-weight: 800; color: #666; text-transform: uppercase;">${d.l}</div>
-                            <div style="display: flex; align-items: center; font-size: ${d.isLive ? '10px' : '11px'}; font-weight: 700; color: #fff; line-height: 1;">
+                            <div style="font-size: 9px; font-weight: 800; color: #777; text-transform: uppercase; margin-bottom: 2px;">${d.l}</div>
+                            <div style="display: flex; align-items: center; font-size: ${d.isLive ? '12px' : '13px'}; font-weight: 700; color: #fff; line-height: 1;">
                                 ${d.isLive ? `<span class="live-dot"></span>` : ''}${d.v}
                                 ${d.link ? `<a href="${d.link}" target="_blank" class="pass-btn">GET PASS</a>` : ''}
                                 ${d.shop ? `<span onclick="openShop(${index})" class="shop-btn">SHOP</span>` : ''}
