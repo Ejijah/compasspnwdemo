@@ -215,7 +215,7 @@
             gap: 3px; margin-left: 10px; vertical-align: middle;
         }
 
-        #gear-overlay {
+        #gear-overlay, #info-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 150; display: none; padding: 50px 20px;
         }
@@ -259,6 +259,11 @@
         <div id="gear-list"></div>
     </div>
 
+    <div id="info-overlay">
+        <div class="close-btn" onclick="closeInfo()">✕</div>
+        <div id="info-content-target" style="overflow-y:auto; height:100%; scrollbar-width:none;"></div>
+    </div>
+
     <div id="detail-view">
         <div id="detail-content"></div>
     </div>
@@ -284,188 +289,222 @@
 const ADVENTURES = [
     { n: "Spencer Butte", drive: 12, len: "1.7mi", elev: "784ft", diff: "Mid", vibe: "Forest", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "The quickest way to get a 360-degree view of the city.", tags: ["Summit", "Fast"], fact: "The Kalapuya people originally named this peak 'Champ-a te,' which translates to Rattlesnake Mountain.", nature: ["Bobcats", "Great Horned Owls", "Black-tailed Deer"], risk: "Cougar Sightings / Poison Oak", 
       img: "spencersbutte.jpg",
+      summary: "The quintessential Eugene hike, offering 360-degree views of the Willamette Valley and the Cascades.",
+      info: "Rising to 2,055 feet, Spencer Butte is the crowning jewel of Eugene's Ridgeline Trail System. The summit is composed of a hard volcanic plug that has resisted erosion more effectively than the surrounding landscape. On a clear day, hikers can see as far as Mt. Hood to the north and the Three Sisters to the east. It serves as a vital habitat for local wildlife, including peregrine falcons that occasionally nest on its rocky faces.",
       details: [
-          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Spencer+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 85, color: "#ef4444" }, 
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Spencer+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 85, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 18", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
-          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "👟", shop: true }
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Salomon Trail Shoes", p: "$140", i: "👟" }, { n: "Hydro Flask 24oz", p: "$35", i: "💧" }, { n: "Smartwool Socks", p: "$24", i: "🧦" }, { n: "Black Diamond Poles", p: "$120", i: "🦯" }, { n: "PNW Sun Hat", p: "$28", i: "🧢" }]
     },
     { n: "Silver Falls", drive: 45, len: "7.2mi", elev: "1.1k", diff: "Hard", vibe: "Water", weather: "47°", icon: "🌧️", cls: "weather-rain", desc: "Crown Jewel waterfalls with ten massive drops.", tags: ["Iconic", "Mist"], fact: "You aren't just looking at water—you're walking through 15-million-year-old basalt lava flows.", nature: ["Giant Salamanders", "Bald Eagles", "Salmonberry"], risk: "Slippery Ledges / Elk", 
       img: "silverfallsstatepark.jpg",
+      summary: "Known as the 'Crown Jewel' of the Oregon State Parks system, featuring the famous Trail of Ten Falls.",
+      info: "Silver Falls State Park is a 9,000-acre wonderland. The Trail of Ten Falls is a nationally recognized canyon trail that takes you behind four of the ten waterfalls. The park sits on a layer of volcanic basalt which overlies softer sandstone; as the water erodes the sandstone, it creates the massive alcoves behind the falls. South Falls, the most famous, drops 177 feet into a serene pool.",
       details: [
-          { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Silver+Falls+State+Park" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Max", i: "👥", isLive: true, pct: 95, color: "#ef4444" }, 
+          { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Silver+Falls+State+Park" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "pass required", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Max", i: "👥", isLive: true, pct: 95, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Arc'teryx Rain Shell", p: "$400", i: "🧥" }, { n: "Gore-Tex Boots", p: "$220", i: "🥾" }, { n: "Exospikes Traction", p: "$65", i: "⛓️" }, { n: "Waterproof Map", p: "$15", i: "🗺️" }, { n: "Osprey Rain Cover", p: "$25", i: "🎒" }]
     },
     { n: "Skinner Butte", drive: 5, len: "0.5mi", elev: "150ft", diff: "Easy", vibe: "Sunset", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "Historic drive-up park with the best sunset views.", tags: ["City", "Rock"], fact: "The butte's west side features 'The Columns,' a massive urban rock climbing wall.", nature: ["Peregrine Falcons", "Ponderosa Pines", "Red Foxes"], risk: "Urban Traffic / Cliffs", 
       img: "skinnersbutte.jpg",
+      summary: "A historic landmark overlooking downtown Eugene and the Willamette River, perfect for sunsets.",
+      info: "Named after Eugene Skinner, the city's founder, this butte offers a glimpse into the region's history. The 'Columns' on the west side are basalt pillars formed by cooling lava, now a popular spot for urban rock climbing. The summit features the iconic 'O' and provides a perfect vantage point for watching the sun set over the Coast Range and the city lights flicker on.",
       details: [
-          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Skinner+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Skinner+Butte" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 42", i: "🍃", isLive: true, pct: 42, color: "#facc15" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 30, color: "#4ade80" }, 
-          { l: "Toilets", v: "Near", i: "🚻" }, { l: "Gear", v: "", i: "🕶️", shop: true }
+          { l: "Toilets", v: "Near", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Polarized Shades", p: "$65", i: "🕶️" }, { n: "Rumpl Blanket", p: "$99", i: " Couch" }, { n: "Portable Speaker", p: "$45", i: "🔊" }, { n: "Osprey Daylite", p: "$60", i: "🎒" }, { n: "Insulated Tumbler", p: "$25", i: "☕" }]
     },
     { n: "Mt. Pisgah", drive: 15, len: "3.2mi", elev: "1.0k", diff: "Mid", vibe: "Sunset", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Wildflower-heavy slopes and great valley views.", tags: ["Flowers", "Local"], fact: "The summit features a massive bronze relief map pointing to every peak in view.", nature: ["Acorn Woodpeckers", "Camas Lilies", "Osprey"], risk: "Ticks / Rattlesnakes", 
       img: "pisgah.jpg",
+      summary: "A massive arboretum and hiking destination with diverse ecosystems and expansive valley views.",
+      info: "The Howard Buford Recreation Area, home to Mt. Pisgah, spans over 2,200 acres. It features one of the most significant remnants of the Willamette Valley's oak savanna ecosystem. The summit is marked by a unique bronze relief map. The area is a haven for birdwatchers and wildflower enthusiasts, especially in the spring when the Camas lilies bloom across the hillsides.",
       details: [
-          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Mount+Pisgah+Eugene" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
-          { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Mount+Pisgah+Eugene" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
+          { l: "cell service", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 25", i: "🍃", isLive: true, pct: 25, color: "#4ade80" }, 
           { l: "Parking", v: "80%", i: "🅿️", isLive: true, pct: 80, color: "#facc15" }, 
-          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Patagonia Windbreaker", p: "$129", i: "🧥" }, { n: "Hiking Trousers", p: "$90", i: "👖" }, { n: "Energy Gels (Box)", p: "$30", i: "⚡" }, { n: "Sunscreen Stick", p: "$15", i: "🧴" }, { n: "Buff Neck Gaiter", p: "$20", i: "🧣" }]
     },
     { n: "Blue Pool", drive: 75, len: "4.2mi", elev: "200ft", diff: "Mid", vibe: "Water", weather: "45°", icon: "☁️", cls: "weather-cloud", desc: "An impossibly blue volcanic pool that stays 37°F year-round.", tags: ["Volcanic", "Teal"], fact: "The water is so clear it looks 2 feet deep, but it's actually over 30 feet deep.", nature: ["Harlequin Ducks", "Vine Maples", "Black Bears"], risk: "Hypothermia / Rocks", 
       img: "bluepool.jpg",
+      summary: "A stunning, crystal-clear turquoise pool where the McKenzie River resurfaces from an underground lava tube.",
+      info: "The 'falls' at Blue Pool only flow during exceptionally wet winters; most of the year, the river flows through a 2-mile-long subterranean lava tube before bubbling up into this 30-foot-deep pool. The water temperature is a constant 37 degrees Fahrenheit. The surrounding forest is part of the Willamette National Forest and features ancient Douglas firs and moss-covered basalt cliffs.",
       details: [
-          { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamolitch+Falls+Blue+Pool" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 70, color: "#facc15" }, 
+          { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamolitch+Falls+Blue+Pool" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 70, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 90, color: "#ef4444" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Danner Mountain 600", p: "$210", i: "🥾" }, { n: "LifeStraw Bottle", p: "$40", i: "💧" }, { n: "Emergency Blanket", p: "$8", i: "⛺" }, { n: "Bear Spray", p: "$50", i: "💨" }, { n: "Topo Map Compass", p: "$25", i: "🧭" }]
     },
     { n: "Sahalie Falls", drive: 70, len: "2.6mi", elev: "400ft", diff: "Easy", vibe: "Water", weather: "44°", icon: "🌧️", cls: "weather-rain", desc: "Roaring 100ft falls on the McKenzie River.", tags: ["River", "Loud"], fact: "Sahalie is a Chinook Jargon word meaning 'high' or 'heavenly.'", nature: ["Chinook Salmon", "Douglas Fir", "River Otters"], risk: "Ice in Winter / Spray", 
       img: "sahaliefalls.jpg",
+      summary: "A thunderous 100-foot waterfall on the McKenzie River, easily accessible and incredibly powerful.",
+      info: "Sahalie Falls is the first of three major waterfalls on the McKenzie River. It was formed about 3,000 years ago by a lava flow that dammed the river. The name 'Sahalie' is Chinook Jargon for 'high.' A wheelchair-accessible platform provides a safe view of the roaring white water as it plunges over the basalt cliff into a churning pool below.",
       details: [
-          { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sahalie+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 50, color: "#facc15" }, 
+          { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sahalie+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 50, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Rain Jacket", p: "$110", i: "🧥" }, { n: "Waterproof Shoes", p: "$150", i: "👟" }, { n: "Camera Strap", p: "$35", i: "📷" }, { n: "Hand Warmers", p: "$5", i: "🔥" }, { n: "Hiking Pack", p: "$80", i: "🎒" }]
     },
     { n: "Sweet Creek", drive: 60, len: "2.2mi", elev: "150ft", diff: "Easy", vibe: "Forest", weather: "52°", icon: "☁️", cls: "weather-cloud", desc: "Dozens of small cascades along a mossy canyon.", tags: ["Moss", "Family"], fact: "The trail features unique metal catwalks bolted directly into the canyon walls.", nature: ["Newts", "Sword Ferns", "Red Cedars"], risk: "Slippery Metal / Ticks", 
       img: "sweetcreek.jpg",
+      summary: "A gentle, mossy trail featuring a series of small, picturesque cascades and unique metal catwalks.",
+      info: "Located near Mapleton, the Sweet Creek Trail is famous for its lush, rainforest-like atmosphere. The trail utilizes metal catwalks bolted into the canyon walls to allow passage through narrow sections of the creek. It features 11 small waterfalls in total. It's a prime example of the temperate rainforests found in the Oregon Coast Range, dominated by maple and alder.",
       details: [
-          { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sweet+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 15, color: "#4ade80" }, 
+          { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Sweet+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 10", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 20, color: "#4ade80" }, 
-          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Wool Base Layer", p: "$75", i: "👕" }, { n: "Binoculars", p: "$95", i: "🔭" }, { n: "First Aid Kit", p: "$25", i: "🩹" }, { n: "Protein Bars", p: "$15", i: "🍫" }, { n: "Hat", p: "$20", i: "🧢" }]
     },
     { n: "Toketee Falls", drive: 110, len: "0.8mi", elev: "150ft", diff: "Easy", vibe: "Magic", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Columnar basalt cliffs framing a two-tiered waterfall.", tags: ["Basalt", "Geometry"], fact: "The falls are framed by perfectly hexagonal basalt columns formed by cooling lava.", nature: ["Douglas Fir", "Moss", "Osprey"], risk: "Cliff Edges", 
       img: "toketee.jpg",
+      summary: "One of Oregon's most famous waterfalls, framed by a perfect amphitheater of columnar basalt.",
+      info: "'Toketee' is a Chinook word meaning 'pretty' or 'graceful.' The falls are famous for the distinct hexagonal basalt columns that surround the lower 80-foot drop. The North Umpqua River carved this canyon through Pliocene-era volcanic flows. Before the viewing platform was built, a massive wooden pipeline (still visible today) diverted water for hydroelectric power.",
       details: [
-          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Toketee+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 45, color: "#facc15" }, 
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Toketee+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 45, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 15", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
           { l: "Parking", v: "50%", i: "🅿️", isLive: true, pct: 50, color: "#facc15" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "📷", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Wide Angle Lens", p: "$450", i: "📷" }, { n: "Sturdy Tripod", p: "$120", i: "🔭" }, { n: "Hiking Boots", p: "$160", i: "🥾" }, { n: "Rain Shell", p: "$100", i: "🧥" }, { n: "Daypack", p: "$65", i: "🎒" }]
     },
     { n: "Salt Creek Falls", drive: 65, len: "1.0mi", elev: "200ft", diff: "Easy", vibe: "Water", weather: "42°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's second highest waterfall at a massive 286ft drop.", tags: ["Power", "Huge"], fact: "The sheer volume of water creates a constant mist that sustains its own micro-climate.", nature: ["Mountain Hemlock", "Pika", "Ravens"], risk: "Spray / Ice", 
       img: "saltcreekfalls.jpg",
+      summary: "A massive, powerful waterfall that is the second highest in Oregon, dropping nearly 300 feet.",
+      info: "Salt Creek Falls is a plunge waterfall located in the Cascade Range. It drops 286 feet into a gaping canyon. The falls were created by glaciers carving through layers of volcanic rock. The mist from the falls is so constant that the surrounding rocks are perpetually covered in vibrant green moss and ferns, creating a unique micro-environment even in the heat of summer.",
       details: [
-          { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Salt+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
-          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 65, color: "#facc15" }, 
+          { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Salt+Creek+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "cell service", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 65, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 20", i: "🍃", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Parking", v: "75%", i: "🅿️", isLive: true, pct: 75, color: "#facc15" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Insulated Jacket", p: "$180", i: "🧥" }, { n: "Gore-Tex Shell", p: "$250", i: "🧥" }, { n: "Gloves", p: "$30", i: "🧤" }, { n: "Camera Rain Cover", p: "$20", i: "🌧️" }, { n: "Heavy Socks", p: "$25", i: "🧦" }]
     },
     { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
       img: "abiquafalls.jpg",
+      summary: "A hidden gem featuring a spectacular basalt amphitheater and a deep, teal-colored pool.",
+      info: "Located on private land owned by the Mount Angel Abbey, Abiqua Falls is one of the most photogenic spots in Oregon. The trail is steep and unmaintained, requiring a scramble down a hillside. The waterfall itself is a 92-foot drop surrounded by some of the most perfectly formed columnar basalt in the Pacific Northwest, looking almost like a pipe organ.",
       details: [
-          { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Abiqua+Falls" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 25, color: "#4ade80" }, 
+          { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Abiqua+Falls" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 25, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 14", i: "🍃", isLive: true, pct: 14, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 15, color: "#4ade80" }, 
-          { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "🧤", shop: true }
+          { l: "Toilets", v: "None", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Work gloves", p: "$15", i: "🧤" }, { n: "High traction boots", p: "$210", i: "🥾" }, { n: "Dry bag", p: "$35", i: "🎒" }, { n: "Towel", p: "$20", i: "🧣" }, { n: "Headlamp", p: "$40", i: "🔦" }]
     },
     { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
       img: "wildhorselake.jpg",
+      summary: "A high-altitude glacial lake nestled in a dramatic cirque beneath the summit of Steens Mountain.",
+      info: "To reach the lake, you must descend 1,000 feet from the rim of the Steens Mountain Loop Road. This is a true alpine environment at nearly 9,000 feet elevation. The Steens is a massive fault-block mountain, meaning one side is a gentle slope and the other is a precipitous 5,000-foot drop into the Alvord Desert. The lake is often frozen well into July and surrounded by wildflowers.",
       details: [
-          { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Wildhorse+Lake+Steens+Mountain" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Wildhorse+Lake+Steens+Mountain" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
           { l: "Parking", v: "Zero", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
-          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🦯", shop: true }
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Down Puffy", p: "$220", i: "🧥" }, { n: "Trekking Poles", p: "$130", i: "🦯" }, { n: "Emergency Bivvy", p: "$25", i: "⛺" }, { n: "Satellite Messenger", p: "$350", i: "📡" }, { n: "Filter Straw", p: "$25", i: "💧" }]
     },
     { n: "Watson Falls", drive: 105, len: "1.0mi", elev: "300ft", diff: "Easy", vibe: "Power", weather: "46°", icon: "🌧️", cls: "weather-rain", desc: "The highest waterfall in Southwest Oregon at 272 feet.", tags: ["Basalt", "Mist"], fact: "The falls drop over a massive cliff of Umpqua basalt, creating a heavy wind even on calm days.", nature: ["Douglas Fir", "Sword Ferns", "Pacific Giant Salamander"], risk: "Slippery Bridges", 
       img: "watsonfalls.jpg",
+      summary: "The highest waterfall in the Umpqua National Forest, known for its dramatic 272-foot plunge.",
+      info: "Watson Falls is a classic 'veil' waterfall, where the water spreads out as it falls over a massive basalt cliff. The trail winds through an old-growth forest of Douglas fir and hemlock. The sheer height of the falls creates its own wind and mist, which can be felt from the lower bridges. It's part of the 'Highway of Waterfalls' along the North Umpqua River.",
       details: [
-          { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Watson+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Watson+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 12, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 25, color: "#4ade80" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Rain Poncho", p: "$15", i: "🧥" }, { n: "Sturdy Sandals", p: "$100", i: "👡" }, { n: "Camera Lens Cloth", p: "$10", i: "🧼" }, { l: "Lightweight Shell", p: "$90", i: "🧥" }, { n: "Waterproof Watch", p: "$60", i: "⌚" }]
     },
     { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
       img: "multnomahfalls.jpg",
+      summary: "Oregon's most visited natural site, a towering two-tiered waterfall in the Columbia River Gorge.",
+      info: "At 620 feet, Multnomah Falls is the tallest waterfall in Oregon. According to Native American legend, the falls were created to win the heart of a young princess. The Benson Bridge, built in 1914, spans the lower falls and offers a dizzying view of the upper tier. It is one of the few waterfalls in the gorge that does not dry up in the summer due to underground springs.",
       details: [
-          { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Multnomah+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
-          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "MAX", i: "👥", isLive: true, pct: 100, color: "#ef4444" }, 
+          { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Multnomah+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
+          { l: "cell service", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "MAX", i: "👥", isLive: true, pct: 100, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 30", i: "🍃", isLive: true, pct: 30, color: "#facc15" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "👟", shop: true }
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Walking Shoes", p: "$120", i: "👟" }, { n: "Windbreaker", p: "$110", i: "🧥" }, { n: "Souvenir Cap", p: "$25", i: "🧢" }, { n: "Phone Tether", p: "$15", i: "📱" }, { n: "Refillable Bottle", p: "$30", i: "💧" }]
     },
     { n: "Proxy Falls", drive: 85, len: "1.6mi", elev: "150ft", diff: "Easy", vibe: "Magical", weather: "44°", icon: "☁️", cls: "weather-cloud", desc: "A veil-like waterfall that disappears into the ground.", tags: ["Lava", "Veil"], fact: "The falls flow over a porous lava field, meaning the water sinks into the earth rather than forming a stream.", nature: ["Mountain Hemlock", "Moss", "Douglas Fir"], risk: "Slippery Scramble", 
       img: "proxyfalls.jpg",
+      summary: "A fairytale-like waterfall in the Three Sisters Wilderness that disappears into porous lava rock.",
+      info: "Proxy Falls is actually two separate falls: Upper and Lower. The lower falls are more famous for their 226-foot 'veil' of water that fans out over a mossy wall. Uniquely, the water doesn't form a stream at the bottom; instead, it sinks directly into the ground through ancient, porous volcanic rock and joins the subterranean water table before emerging miles away.",
       details: [
-          { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Proxy+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 55, color: "#facc15" }, 
+          { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Proxy+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 55, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 8, color: "#4ade80" }, 
           { l: "Parking", v: "70%", i: "🅿️", isLive: true, pct: 70, color: "#facc15" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Merrell Moabs", p: "$145", i: "🥾" }, { n: "Wide Rim Hat", p: "$45", i: "🤠" }, { n: "Daylite Plus", p: "$75", i: "🎒" }, { n: "Wool Blend Socks", p: "$22", i: "🧦" }, { n: "Camera Lens Clip", p: "$50", i: "📸" }]
     },
     { n: "Tamawanas Falls", drive: 160, len: "3.4mi", elev: "550ft", diff: "Mid", vibe: "Ancient", weather: "40°", icon: "🌧️", cls: "weather-rain", desc: "A massive curtain falls at the foot of Mt. Hood.", tags: ["Mt Hood", "River"], fact: "The trail follows Cold Spring Creek, providing constant white noise and fresh air.", nature: ["Red Cedar", "Trout", "American Dipper"], risk: "Rock Slides", 
       img: "tamanawasfalls.jpg",
+      summary: "A wide, curtain-like waterfall on the eastern slopes of Mt. Hood that you can walk behind.",
+      info: "The trail follows the scenic Cold Spring Creek through a canyon of Douglas fir and cedar. The falls drop 150 feet over a lava cliff. Because the cliff is undercut, hikers can carefully scramble behind the curtain of water. In the winter, the falls often freeze into a massive, blue-tinted ice pillar, attracting ice climbers and photographers alike.",
       details: [
-          { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamanawas+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫" }, 
-          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
+          { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Tamanawas+Falls" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "NW For", i: "🎫" }, 
+          { l: "cell service", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
           { l: "Air Quality", v: "AQI 11", i: "🍃", isLive: true, pct: 11, color: "#4ade80" }, 
           { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Thermal Layer", p: "$85", i: "👕" }, { n: "Fleece Hoody", p: "$120", i: "🧥" }, { n: "Beanies", p: "$20", i: "🧢" }, { n: "Traction Spikes", p: "$70", i: "⛸️" }, { n: "Small Dry Bag", p: "$25", i: "🎒" }]
     },
     { n: "Smith Rock", drive: 150, len: "3.7mi", elev: "1.2k", diff: "Hard", vibe: "Desert", weather: "62°", icon: "☀️", cls: "weather-sun", desc: "The birthplace of modern American sport climbing.", tags: ["Desert", "Climb"], fact: "Misery Ridge trail is actually shorter than it looks, but the 1,000ft vertical gain is no joke.", nature: ["Golden Eagles", "Mule Deer", "Rattlesnakes"], risk: "Heat / Steepness", 
       img: "smithrock.jpg",
+      summary: "A world-renowned destination for rock climbing and hiking, featuring dramatic orange basalt cliffs.",
+      info: "Smith Rock State Park is considered the birthplace of modern American sport climbing. The sheer cliffs were formed by massive volcanic eruptions half a million years ago. The Crooked River winds around the base of the towers. The 'Monkey Face' pillar is one of the most iconic rock formations in the world, standing as a sentinel over the high desert landscape.",
       details: [
-          { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Smith+Rock+State+Park" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫" }, 
-          { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 80, color: "#ef4444" }, 
+          { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Smith+Rock+State+Park" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "$5", i: "🎫" }, 
+          { l: "cell service", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 80, color: "#ef4444" }, 
           { l: "Air Quality", v: "AQI 22", i: "🍃", isLive: true, pct: 22, color: "#4ade80" }, 
           { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🦯", shop: true }
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Hydration Pack", p: "$110", i: "🎒" }, { n: "Sun Shirt", p: "$65", i: "👕" }, { n: "Trekking Poles", p: "$140", i: "🦯" }, { n: "Salt Tabs", p: "$12", i: "🧂" }, { n: "Hiking Trousers", p: "$95", i: "👖" }]
     },
     { n: "Owyhee Canyon", drive: 360, len: "6.0mi", elev: "800ft", diff: "Hard", vibe: "Monolith", weather: "68°", icon: "☀️", cls: "weather-sun", desc: "The Grand Canyon of Oregon, remote and rugged.", tags: ["Remote", "Deep"], fact: "This area is one of the least light-polluted places in the lower 48—perfect for Milky Way shots.", nature: ["Pronghorn", "Coyotes", "Sage Grouse"], risk: "Isolation / Mud", 
       img: "owyheecanyon.jpg",
+      summary: "Known as 'Oregon's Grand Canyon,' this remote desert landscape features massive rhyolite monoliths.",
+      info: "The Owyhee Canyonlands represent one of the largest unprotected wilderness areas in the lower 48 states. The red rock canyons were carved by the Owyhee River through layers of volcanic ash and lava. It is a land of extreme silence and vast vistas, home to California bighorn sheep, golden eagles, and unique plants found nowhere else on earth.",
       details: [
-          { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Owyhee+Canyonlands" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
-          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 2, color: "#4ade80" }, 
+          { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Owyhee+Canyonlands" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "None", i: "🎫" }, 
+          { l: "cell service", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 2, color: "#4ade80" }, 
           { l: "Air Quality", v: "AQI 4", i: "🍃", isLive: true, pct: 4, color: "#4ade80" }, 
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
-          { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "📡", shop: true }
+          { l: "Toilets", v: "None", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "GPS messenger", p: "$350", i: "📡" }, { n: "Extra fuel can", p: "$45", i: "⛽" }, { n: "Full spare tire", p: "$200", i: "🛞" }, { n: "Galvanized water tank", p: "$40", i: "💧" }, { n: "First Aid XL", p: "$60", i: "🩹" }]
     }
@@ -522,6 +561,28 @@ function openShop(idx) {
 
 function closeGear() { document.getElementById('gear-overlay').style.display = 'none'; }
 
+function openMoreInfo(idx) {
+    currentAdventureIndex = idx;
+    const item = ADVENTURES[idx];
+    const infoTarget = document.getElementById('info-content-target');
+    infoTarget.innerHTML = `
+        <div style="font-size: 20px; font-weight: 900; margin-bottom: 20px; color:#4ade80; text-transform:uppercase; letter-spacing:-0.5px;">Insights</div>
+        
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:18px; border:1px solid rgba(255,255,255,0.1); margin-bottom:15px;">
+            <div style="font-size: 10px; font-weight: 900; color:#4ade80; text-transform:uppercase; margin-bottom:6px;">Short Summary</div>
+            <div style="font-size: 13px; font-weight: 600; line-height: 1.4; color:#fff;">${item.summary}</div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:18px; border:1px solid rgba(255,255,255,0.1); margin-bottom:100px;">
+            <div style="font-size: 10px; font-weight: 900; color:#4ade80; text-transform:uppercase; margin-bottom:6px;">Detailed Breakdown</div>
+            <div style="font-size: 12px; font-weight: 500; line-height: 1.5; color:#ccc;">${item.info}</div>
+        </div>
+    `;
+    document.getElementById('info-overlay').style.display = 'block';
+}
+
+function closeInfo() { document.getElementById('info-overlay').style.display = 'none'; }
+
 function shareHike(index) {
     const item = ADVENTURES[index];
     const text = `Check out ${item.n} on UnlockPNW!`;
@@ -556,6 +617,7 @@ function openDetail(index) {
                                 ${d.link && !d.view ? `<a href="${d.link}" target="_blank" class="pass-btn">VIEW</a>` : ''}
                                 ${d.view ? `<a href="${d.link}" target="_blank" class="view-btn">VIEW</a>` : ''}
                                 ${d.shop ? `<span onclick="openShop(${index})" class="shop-btn">SHOP</span>` : ''}
+                                ${d.moreInfo ? `<span onclick="openMoreInfo(${index})" class="shop-btn">READ</span>` : ''}
                                 ${d.isLive ? `
                                     <div class="live-wrap">
                                         <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${d.pct}%; background:${d.color};"></div></div>
