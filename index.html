@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass PNW | V1.2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;900&display=swap');
+        
+        body { 
+            margin:0; font-family:'Plus Jakarta Sans'; background:#333; 
+            overflow:hidden; color: white; height: 100vh;
+            display: flex; justify-content: center; align-items: center; perspective: 1200px;
+        }
+        
+        .phone {
+            width:360px; height:780px; border-radius:54px; overflow:hidden;
+            background:#000; box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            position:relative; border: 12px solid #000; transform: scale(0.85); 
+            transition: transform 0.1s ease-out; z-index: 10;
+        }
+
+        /* --- MOBILE FULLSCREEN BULLETPROOFING --- */
+        body.is-mobile .phone {
+            width: 100vw;
+            height: 100dvh; /* dvh handles mobile browser address bars */
+            border-radius: 0;
+            border: none;
+            transform: none !important;
+            box-shadow: none;
+        }
+        body.is-mobile .iphone-notch {
+            display: none; /* Hide fake notch on real devices */
+        }
+        body.is-mobile {
+            perspective: none;
+            background: #000;
+        }
+        /* ---------------------------------------- */
+
+        #internal-bg-effects {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; 
+        }
+        .internal-fall { 
+            position: absolute; top: -50px; animation: internalFall linear; 
+            opacity: 1; font-size: 20px;
+        }
+        @keyframes internalFall { to { transform:translateY(850px); } }
+
+        .iphone-notch { 
+            width:150px; height:28px; background:#000; border-radius:0 0 20px 20px; 
+            margin: 0 auto; position: relative; z-index: 60;
+            display: flex; justify-content: center; align-items: flex-start; padding-top: 8px;
+        }
+
+        .speaker-grill { width: 45px; height: 4px; background: #1a1a1a; border-radius: 4px; border: 1px solid #222; }
+
+        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 5; }
+        .hero-text { font-size: 20px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 5px; }
+        .accent-green { color: #4ade80; }
+
+        .btn-reroll {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80; padding: 6px 12px; border-radius: 12px;
+            cursor: pointer; border: 1px solid rgba(74, 222, 128, 0.3);
+            text-transform: uppercase; margin-top: 6px; transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: fit-content; line-height: 1;
+        }
+        .btn-reroll .main-label { font-size: 9px; font-weight: 800; }
+        
+        @keyframes labelPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; color: #fff; }
+        }
+        .btn-reroll .sub-label { 
+            font-size: 6px; font-weight: 900; margin-top: 2px; letter-spacing: 1px;
+            animation: labelPulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes compassFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-2px) rotate(5deg); }
+        }
+        .compass-icon { font-size: 20px; animation: compassFloat 3s ease-in-out infinite; display: inline-block; }
+
+        .glass-panel {
+            background: #000; 
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
+            padding: 12px; margin-bottom: 8px; position: relative; z-index: 2; overflow: hidden;
+        }
+
+        .action-row { display: flex; gap: 8px; width: 100%; margin-top: 5px; position: relative; z-index: 5; justify-content: center; }
+
+        .btn-go {
+            background: #4ade80; color: #000; font-weight: 900; padding: 8px 24px; 
+            border-radius: 12px; text-align: center; width: fit-content; display: block; 
+            font-size: 11px; cursor: pointer; transition: all 0.2s; border: none;
+            text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;
+            margin: 0 auto;
+        }
+        .btn-go:active { transform: scale(0.96); background: #3cc36d; }
+
+        .detail-body .btn-go { flex: 1; width: auto; margin: 0; padding: 12px; }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.08); color: #fff; font-weight: 700; padding: 12px; 
+            border-radius: 12px; text-align: center; flex: 1; display: flex; 
+            align-items: center; justify-content: center; gap: 8px;
+            font-size: 11px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
+        }
+
+        .btn-share {
+            background: rgba(255,255,255,0.05); color: #555; font-weight: 800; padding: 8px;
+            border-radius: 10px; text-align: center; width: 100px; display: block;
+            margin: 5px auto 0; font-size: 9px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase; position: relative; z-index: 5;
+        }
+
+        #feed { padding: 0 15px; height: calc(100% - 110px); overflow: hidden; position: relative; z-index: 5; } 
+        
+        #detail-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 50; display: none; padding: 0;
+            overflow: hidden;
+            animation: detailSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes detailSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        #detail-content { height: 100%; display: flex; flex-direction: column; }
+
+        .detail-hero-container {
+            width: 100%; height: 180px; position: relative; overflow: hidden;
+            background-size: cover; background-position: center; border-radius: 18px;
+            margin-bottom: 15px;
+        }
+
+        .detail-body { flex: 1; padding: 35px 20px 20px 20px; background: #000; display: flex; flex-direction: column; justify-content: flex-start; position: relative; }
+
+        .light { width: 7px; height: 7px; border-radius: 50%; background: #222; opacity: 0.3; }
+        .light.green.active { background: #4ade80; box-shadow: 0 0 10px #4ade80; opacity: 1; }
+        .light.yellow.active { background: #facc15; box-shadow: 0 0 10px #facc15; opacity: 1; }
+        .light.red.active { background: #ef4444; box-shadow: 0 0 10px #ef4444; opacity: 1; }
+
+        .stat-box { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .stat-val { font-size: 10px; font-weight: 800; color: #fff; white-space: nowrap; }
+        .keyword-pill { font-size: 7px; font-weight: 900; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 5px; border-radius: 4px; text-transform: uppercase; }
+        
+        .fall { position:fixed; top:-50px; animation: fall linear forwards; pointer-events:none; z-index: 1; opacity: 0.5; }
+        @keyframes fall { to { transform:translateY(115vh); } }
+        
+        @keyframes springUp { 
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            70% { transform: translateY(-5px) scale(1.01); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .adventure-texture {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 1; pointer-events: none;
+            background-size: cover; background-position: center;
+        }
+        .close-btn { 
+            position: absolute; top: 35px; right: 15px; background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(5px); width: 32px; height: 32px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; z-index: 60; color: white;
+        }
+
+        .info-bubble {
+            background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 14px; 
+            border: 1px solid rgba(255,255,255,0.1); display: flex; 
+            justify-content: space-between; align-items: center; height: 44px;
+        }
+        .bubble-icon { font-size: 14px; opacity: 0.6; }
+
+        .pass-btn, .shop-btn {
+            background: #4ade80; color: #000; font-size: 8px; font-weight: 900;
+            padding: 3px 6px; border-radius: 6px; text-decoration: none;
+            display: inline-block; margin-left: 6px; vertical-align: middle;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.3); cursor: pointer;
+        }
+        .shop-btn { background: #fff; margin-left: 0; margin-top: 2px; }
+
+        .live-dot { width: 5px; height: 5px; background: #ef4444; border-radius: 50%; display: inline-block; margin-right: 3px; animation: signalPulse 1.5s infinite; }
+        @keyframes signalPulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .mini-bar-bg { width: 25px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .mini-bar-fill { height: 100%; border-radius: 2px; }
+        .live-timestamp { font-size: 5.5px; color: #666; font-weight: 900; text-transform: uppercase; margin-left: 3px; white-space: nowrap; }
+        
+        @keyframes liveFadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .live-wrap { 
+            display: inline-flex; flex-direction: column; align-items: flex-start; 
+            animation: liveFadeIn 0.5s ease-out 0.4s both;
+            gap: 2px; margin-left: 8px; vertical-align: middle;
+        }
+
+        #gear-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100; display: none; padding: 50px 20px;
+        }
+        .gear-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px;
+            margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .weather-sun { display: inline-block; animation: sunSpin 8s linear infinite; }
+        .weather-rain { display: inline-block; animation: rainDrop 0.8s ease-in-out infinite; }
+        .weather-cloud { display: inline-block; animation: cloudDrift 3s ease-in-out infinite; }
+        @keyframes sunSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rainDrop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+        @keyframes cloudDrift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+    </style>
+</head>
+<body>
+
+<div id="bg-effects"></div>
+
+<div class="phone" id="phone">
+    <div id="internal-bg-effects"></div>
+    <div class="iphone-notch"><div class="speaker-grill"></div></div>
+    
+    <div id="gear-overlay">
+        <div class="close-btn" style="top: 12px;" onclick="closeGear()">✕</div>
+        <div style="font-size: 20px; font-weight: 900; margin-bottom: 20px; color:#4ade80;">GEAR CHECKLIST</div>
+        <div id="gear-list"></div>
+    </div>
+
+    <div id="detail-view">
+        <div class="close-btn" onclick="closeDetail()">✕</div>
+        <div id="detail-content"></div>
+    </div>
+
+    <div class="top-nav">
+        <div style="display:flex; flex-direction:column; gap:2px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="compass-icon">🧭</span>
+                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px;">Compass PNW</span>
+            </div>
+            <div class="btn-reroll" onclick="reRoll()">
+                <span class="main-label">Explore More</span>
+                <span class="sub-label">GENERATE</span>
+            </div>
+        </div>
+        <h1 class="hero-text">stop-planning<br><span class="accent-green">start-going</span></h1>
+    </div>
+
+    <main id="feed"></main>
+</div>
+
+<script>
+const ADVENTURES = [
+    { n: "Spencer Butte", drive: 12, len: "1.7mi", elev: "784ft", diff: "Mid", vibe: "Forest", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "The quickest way to get a 360-degree view of the city.", tags: ["Summit", "Fast"], fact: "The Kalapuya people originally named this peak 'Champ-a te,' which translates to Rattlesnake Mountain.", nature: ["Bobcats", "Great Horned Owls", "Black-tailed Deer"], risk: "Cougar Sightings / Poison Oak", 
+      img: "spencersbutte.jpg",
+      details: [
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Surface", v: "Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 85, color: "#ef4444" }, 
+          { l: "Air Quality", v: "AQI 18", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
+          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "👟", shop: true }
+      ],
+      gear: [{ n: "Salomon Trail Shoes", p: "$140", i: "👟" }, { n: "Hydro Flask 24oz", p: "$35", i: "💧" }, { n: "Smartwool Socks", p: "$24", i: "🧦" }, { n: "Black Diamond Poles", p: "$120", i: "🦯" }, { n: "PNW Sun Hat", p: "$28", i: "🧢" }]
+    },
+    { n: "Silver Falls", drive: 45, len: "7.2mi", elev: "1.1k", diff: "Hard", vibe: "Water", weather: "47°", icon: "🌧️", cls: "weather-rain", desc: "Crown Jewel waterfalls with ten massive drops.", tags: ["Iconic", "Mist"], fact: "You aren't just looking at water—you're walking through 15-million-year-old basalt lava flows.", nature: ["Giant Salamanders", "Bald Eagles", "Salmonberry"], risk: "Slippery Ledges / Elk", 
+      img: "silverfallsstatepark.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 47°", i: "🌡️" }, { l: "Surface", v: "Dirt/Rock", i: "🥾" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "$5", i: "🎫", link: "https://stateparks.oregon.gov/index.cfm?do=visit.status" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Max", i: "👥", isLive: true, pct: 95, color: "#ef4444" }, 
+          { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
+          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Arc'teryx Rain Shell", p: "$400", i: "🧥" }, { n: "Gore-Tex Boots", p: "$220", i: "🥾" }, { n: "Exospikes Traction", p: "$65", i: "⛓️" }, { n: "Waterproof Map", p: "$15", i: "🗺️" }, { n: "Osprey Rain Cover", p: "$25", i: "🎒" }]
+    },
+    { n: "Skinner Butte", drive: 5, len: "0.5mi", elev: "150ft", diff: "Easy", vibe: "Sunset", weather: "54°", icon: "☀️", cls: "weather-sun", desc: "Historic drive-up park with the best sunset views.", tags: ["City", "Rock"], fact: "The butte's west side features 'The Columns,' a massive urban rock climbing wall.", nature: ["Peregrine Falcons", "Ponderosa Pines", "Red Foxes"], risk: "Urban Traffic / Cliffs", 
+      img: "skinnersbutte.jpg",
+      details: [
+          { l: "Weather", v: "☀️ 54°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 42", i: "🍃", isLive: true, pct: 42, color: "#facc15" }, 
+          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 30, color: "#4ade80" }, 
+          { l: "Toilets", v: "Near", i: "🚻" }, { l: "Gear", v: "", i: "👕", shop: true }
+      ],
+      gear: [{ n: "Polarized Shades", p: "$65", i: "🕶️" }, { n: "Rumpl Blanket", p: "$99", i: " Couch" }, { n: "Portable Speaker", p: "$45", i: "🔊" }, { n: "Osprey Daylite", p: "$60", i: "🎒" }, { n: "Insulated Tumbler", p: "$25", i: "☕" }]
+    },
+    { n: "Mt. Pisgah", drive: 15, len: "3.2mi", elev: "1.0k", diff: "Mid", vibe: "Sunset", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Wildflower-heavy slopes and great valley views.", tags: ["Flowers", "Local"], fact: "The summit features a massive bronze relief map pointing to every peak in view.", nature: ["Acorn Woodpeckers", "Camas Lilies", "Osprey"], risk: "Ticks / Rattlesnakes", 
+      img: "Pisgah.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Surface", v: "Gravel", i: "🪨" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫", link: "https://www.lanecounty.org/parks" }, 
+          { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 25", i: "🍃", isLive: true, pct: 25, color: "#4ade80" }, 
+          { l: "Parking", v: "80%", i: "🅿️", isLive: true, pct: 80, color: "#facc15" }, 
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Patagonia Windbreaker", p: "$129", i: "🧥" }, { n: "Hiking Trousers", p: "$90", i: "👖" }, { n: "Energy Gels (Box)", p: "$30", i: "⚡" }, { n: "Sunscreen Stick", p: "$15", i: "🧴" }, { n: "Buff Neck Gaiter", p: "$20", i: "🧣" }]
+    },
+    { n: "Blue Pool", drive: 75, len: "4.2mi", elev: "200ft", diff: "Mid", vibe: "Water", weather: "45°", icon: "☁️", cls: "weather-cloud", desc: "An impossibly blue volcanic pool that stays 37°F year-round.", tags: ["Volcanic", "Teal"], fact: "The water is so clear it looks 2 feet deep, but it's actually over 30 feet deep.", nature: ["Harlequin Ducks", "Vine Maples", "Black Bears"], risk: "Hypothermia / Rocks", 
+      img: "bluepool.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 45°", i: "🌡️" }, { l: "Surface", v: "Rocky", i: "⛰️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 70, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 90, color: "#ef4444" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+      ],
+      gear: [{ n: "Danner Mountain 600", p: "$210", i: "🥾" }, { n: "LifeStraw Bottle", p: "$40", i: "💧" }, { n: "Emergency Blanket", p: "$8", i: "⛺" }, { n: "Bear Spray", p: "$50", i: "💨" }, { n: "Topo Map Compass", p: "$25", i: "🧭" }]
+    },
+    { n: "Sahalie Falls", drive: 70, len: "2.6mi", elev: "400ft", diff: "Easy", vibe: "Water", weather: "44°", icon: "🌧️", cls: "weather-rain", desc: "Roaring 100ft falls on the McKenzie River.", tags: ["River", "Loud"], fact: "Sahalie is a Chinook Jargon word meaning 'high' or 'heavenly.'", nature: ["Chinook Salmon", "Douglas Fir", "River Otters"], risk: "Ice in Winter / Spray", 
+      img: "sahaliefalls.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 44°", i: "🌡️" }, { l: "Surface", v: "Paved/Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 50, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Rain Jacket", p: "$110", i: "🧥" }, { n: "Waterproof Shoes", p: "$150", i: "👟" }, { n: "Camera Strap", p: "$35", i: "📷" }, { n: "Hand Warmers", p: "$5", i: "🔥" }, { n: "Hiking Pack", p: "$80", i: "🎒" }]
+    },
+    { n: "Sweet Creek", drive: 60, len: "2.2mi", elev: "150ft", diff: "Easy", vibe: "Forest", weather: "52°", icon: "☁️", cls: "weather-cloud", desc: "Dozens of small cascades along a mossy canyon.", tags: ["Moss", "Family"], fact: "The trail features unique metal catwalks bolted directly into the canyon walls.", nature: ["Newts", "Sword Ferns", "Red Cedars"], risk: "Slippery Metal / Ticks", 
+      img: "sweetcreek.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 52°", i: "🌡️" }, { l: "Surface", v: "Dirt/Metal", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 15, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 10", i: "🍃", isLive: true, pct: 10, color: "#4ade80" }, 
+          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+      ],
+      gear: [{ n: "Wool Base Layer", p: "$75", i: "👕" }, { n: "Binoculars", p: "$95", i: "🔭" }, { n: "First Aid Kit", p: "$25", i: "🩹" }, { n: "Protein Bars", p: "$15", i: "🍫" }, { n: "Hat", p: "$20", i: "🧢" }]
+    },
+    { n: "Toketee Falls", drive: 110, len: "0.8mi", elev: "150ft", diff: "Easy", vibe: "Magic", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "Columnar basalt cliffs framing a two-tiered waterfall.", tags: ["Basalt", "Geometry"], fact: "The falls are framed by perfectly hexagonal basalt columns formed by cooling lava.", nature: ["Douglas Fir", "Moss", "Osprey"], risk: "Cliff Edges", 
+      img: "toketee.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Surface", v: "Dirt/Wood", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 45, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 15", i: "🍃", isLive: true, pct: 15, color: "#4ade80" }, 
+          { l: "Parking", v: "50%", i: "🅿️", isLive: true, pct: 50, color: "#facc15" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "📷", shop: true }
+      ],
+      gear: [{ n: "Wide Angle Lens", p: "$450", i: "📷" }, { n: "Sturdy Tripod", p: "$120", i: "🔭" }, { n: "Hiking Boots", p: "$160", i: "🥾" }, { n: "Rain Shell", p: "$100", i: "🧥" }, { n: "Daypack", p: "$65", i: "🎒" }]
+    },
+    { n: "Salt Creek Falls", drive: 65, len: "1.0mi", elev: "200ft", diff: "Easy", vibe: "Water", weather: "42°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's second highest waterfall at a massive 286ft drop.", tags: ["Power", "Huge"], fact: "The sheer volume of water creates a constant mist that sustains its own micro-climate.", nature: ["Mountain Hemlock", "Pika", "Ravens"], risk: "Spray / Ice", 
+      img: "saltcreekfalls.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 42°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5/NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 65, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 20", i: "🍃", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Parking", v: "75%", i: "🅿️", isLive: true, pct: 75, color: "#facc15" }, 
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Insulated Jacket", p: "$180", i: "🧥" }, { n: "Gore-Tex Shell", p: "$250", i: "🧥" }, { n: "Gloves", p: "$30", i: "🧤" }, { n: "Camera Rain Cover", p: "$20", i: "🌧️" }, { n: "Heavy Socks", p: "$25", i: "🧦" }]
+    },
+    { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
+      img: "abiquafalls.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 49°", i: "🌡️" }, { l: "Surface", v: "Mud/Rock", i: "🥾" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 25, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 14", i: "🍃", isLive: true, pct: 14, color: "#4ade80" }, 
+          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 15, color: "#4ade80" }, 
+          { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "🧤", shop: true }
+      ],
+      gear: [{ n: "Work Gloves", p: "$15", i: "🧤" }, { n: "High Traction Boots", p: "$210", i: "🥾" }, { n: "Dry Bag", p: "$35", i: "🎒" }, { n: "Towel", p: "$20", i: "🧣" }, { n: "Headlamp", p: "$40", i: "🔦" }]
+    },
+    { n: "Wildhorse Lake", drive: 240, len: "2.5mi", elev: "1.2k", diff: "Hard", vibe: "Unreal", weather: "38°", icon: "☀️", cls: "weather-sun", desc: "A glacial cirque lake hidden 1,000ft below the Steens summit.", tags: ["Remote", "Glacial"], fact: "The Steens is a 30-mile long 'fault block' mountain, the largest of its kind in the world.", nature: ["Bighorn Sheep", "Rattlesnakes", "Golden Eagles", "Sagebrush"], risk: "Altitude / High Wind", 
+      img: "wildhorselake.jpg",
+      details: [
+          { l: "Weather", v: "☀️ 38°", i: "🌡️" }, { l: "Surface", v: "Scree", i: "⛰️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Parking", v: "Zero", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Toilets", v: "Base", i: "🚻" }, { l: "Gear", v: "", i: "🦯", shop: true }
+      ],
+      gear: [{ n: "Down Puffy", p: "$220", i: "🧥" }, { n: "Trekking Poles", p: "$130", i: "🦯" }, { n: "Emergency Bivvy", p: "$25", i: "⛺" }, { n: "Satellite Messenger", p: "$350", i: "📡" }, { n: "Filter Straw", p: "$25", i: "💧" }]
+    },
+    { n: "Watson Falls", drive: 105, len: "1.0mi", elev: "300ft", diff: "Easy", vibe: "Power", weather: "46°", icon: "🌧️", cls: "weather-rain", desc: "The highest waterfall in Southwest Oregon at 272 feet.", tags: ["Basalt", "Mist"], fact: "The falls drop over a massive cliff of Umpqua basalt, creating a heavy wind even on calm days.", nature: ["Douglas Fir", "Sword Ferns", "Pacific Giant Salamander"], risk: "Slippery Bridges", 
+      img: "watsonfalls.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 46°", i: "🌡️" }, { l: "Surface", v: "Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Low", i: "👥", isLive: true, pct: 20, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 12", i: "🍃", isLive: true, pct: 12, color: "#4ade80" }, 
+          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 25, color: "#4ade80" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Rain Poncho", p: "$15", i: "🧥" }, { n: "Sturdy Sandals", p: "$100", i: "👡" }, { n: "Camera Lens Cloth", p: "$10", i: "🧼" }, { n: "Lightweight Shell", p: "$90", i: "🧥" }, { n: "Waterproof Watch", p: "$60", i: "⌚" }]
+    },
+    { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
+      img: "multnomahfalls.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 48°", i: "🌡️" }, { l: "Surface", v: "Paved", i: "🛣️" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "Timed", i: "🎫", link: "https://www.recreation.gov/timed-entry/10087045" }, 
+          { l: "Cell", v: "Full", i: "📶" }, { l: "LIVE - CROWDS", v: "MAX", i: "👥", isLive: true, pct: 100, color: "#ef4444" }, 
+          { l: "Air Quality", v: "AQI 30", i: "🍃", isLive: true, pct: 30, color: "#facc15" }, 
+          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 100, color: "#ef4444" }, 
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "👕", shop: true }
+      ],
+      gear: [{ n: "Walking Shoes", p: "$120", i: "👟" }, { n: "Windbreaker", p: "$110", i: "🧥" }, { n: "Souvenir Cap", p: "$25", i: "🧢" }, { n: "Phone Tether", p: "$15", i: "📱" }, { n: "Refillable Bottle", p: "$30", i: "💧" }]
+    },
+    { n: "Proxy Falls", drive: 85, len: "1.6mi", elev: "150ft", diff: "Easy", vibe: "Magical", weather: "44°", icon: "☁️", cls: "weather-cloud", desc: "A veil-like waterfall that disappears into the ground.", tags: ["Lava", "Veil"], fact: "The falls flow over a porous lava field, meaning the water sinks into the earth rather than forming a stream.", nature: ["Mountain Hemlock", "Moss", "Douglas Fir"], risk: "Slippery Scramble", 
+      img: "proxyfalls.jpg",
+      details: [
+          { l: "Weather", v: "☁️ 44°", i: "🌡️" }, { l: "Surface", v: "Dirt/Lava", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫", link: "https://www.fs.usda.gov/main/r6/passes-permits/recreation" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 55, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 8", i: "🍃", isLive: true, pct: 8, color: "#4ade80" }, 
+          { l: "Parking", v: "70%", i: "🅿️", isLive: true, pct: 70, color: "#facc15" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🥾", shop: true }
+      ],
+      gear: [{ n: "Merrell Moabs", p: "$145", i: "🥾" }, { n: "Wide Rim Hat", p: "$45", i: "🤠" }, { n: "Daylite Plus", p: "$75", i: "🎒" }, { n: "Wool Blend Socks", p: "$22", i: "🧦" }, { n: "Camera Lens Clip", p: "$50", i: "📸" }]
+    },
+    { n: "Tamawanas Falls", drive: 160, len: "3.4mi", elev: "550ft", diff: "Mid", vibe: "Ancient", weather: "40°", icon: "🌧️", cls: "weather-rain", desc: "A massive curtain falls at the foot of Mt. Hood.", tags: ["Mt Hood", "River"], fact: "The trail follows Cold Spring Creek, providing constant white noise and fresh air.", nature: ["Red Cedar", "Trout", "American Dipper"], risk: "Rock Slides", 
+      img: "tamanawasfalls.jpg",
+      details: [
+          { l: "Weather", v: "🌧️ 40°", i: "🌡️" }, { l: "Surface", v: "Rock/Dirt", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "NW For", i: "🎫" }, 
+          { l: "Cell", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 40, color: "#facc15" }, 
+          { l: "Air Quality", v: "AQI 11", i: "🍃", isLive: true, pct: 11, color: "#4ade80" }, 
+          { l: "Parking", v: "60%", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
+          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
+      ],
+      gear: [{ n: "Thermal Layer", p: "$85", i: "👕" }, { n: "Fleece Hoody", p: "$120", i: "🧥" }, { n: "Beanies", p: "$20", i: "🧢" }, { n: "Traction Spikes", p: "$70", i: "⛸️" }, { n: "Small Dry Bag", p: "$25", i: "🎒" }]
+    },
+    { n: "Smith Rock", drive: 150, len: "3.7mi", elev: "1.2k", diff: "Hard", vibe: "Desert", weather: "62°", icon: "☀️", cls: "weather-sun", desc: "The birthplace of modern American sport climbing.", tags: ["Desert", "Climb"], fact: "Misery Ridge trail is actually shorter than it looks, but the 1,000ft vertical gain is no joke.", nature: ["Golden Eagles", "Mule Deer", "Rattlesnakes"], risk: "Heat / Steepness", 
+      img: "smithrock.jpg",
+      details: [
+          { l: "Weather", v: "☀️ 62°", i: "🌡️" }, { l: "Surface", v: "Dusty", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "$5", i: "🎫" }, 
+          { l: "Cell", v: "Good", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 80, color: "#ef4444" }, 
+          { l: "Air Quality", v: "AQI 22", i: "🍃", isLive: true, pct: 22, color: "#4ade80" }, 
+          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 95, color: "#ef4444" }, 
+          { l: "Toilets", v: "Full", i: "🚻" }, { l: "Gear", v: "", i: "🦯", shop: true }
+      ],
+      gear: [{ n: "Hydration Pack", p: "$110", i: "🎒" }, { n: "Sun Shirt", p: "$65", i: "👕" }, { n: "Trekking Poles", p: "$140", i: "🦯" }, { n: "Salt Tabs", p: "$12", i: "🧂" }, { n: "Hiking Trousers", p: "$95", i: "👖" }]
+    },
+    { n: "Owyhee Canyon", drive: 360, len: "6.0mi", elev: "800ft", diff: "Hard", vibe: "Monolith", weather: "68°", icon: "☀️", cls: "weather-sun", desc: "The Grand Canyon of Oregon, remote and rugged.", tags: ["Remote", "Deep"], fact: "This area is one of the least light-polluted places in the lower 48—perfect for Milky Way shots.", nature: ["Pronghorn", "Coyotes", "Sage Grouse"], risk: "Isolation / Mud", 
+      img: "owyheecanyon.jpg",
+      details: [
+          { l: "Weather", v: "☀️ 68°", i: "🌡️" }, { l: "Surface", v: "Sand/Rock", i: "🥾" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "Pass", v: "None", i: "🎫" }, 
+          { l: "Cell", v: "None", i: "📴" }, { l: "LIVE - CROWDS", v: "Zero", i: "👥", isLive: true, pct: 2, color: "#4ade80" }, 
+          { l: "Air Quality", v: "AQI 4", i: "🍃", isLive: true, pct: 4, color: "#4ade80" }, 
+          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 5, color: "#4ade80" }, 
+          { l: "Toilets", v: "None", i: "🚻" }, { l: "Gear", v: "", i: "📡", shop: true }
+      ],
+      gear: [{ n: "GPS Messenger", p: "$350", i: "📡" }, { n: "Extra Fuel Can", p: "$45", i: "⛽" }, { n: "Full Spare Tire", p: "$200", i: "🛞" }, { n: "Galvanized Water Tank", p: "$40", i: "💧" }, { n: "First Aid XL", p: "$60", i: "🩹" }]
+    }
+];
+
+let activeIndices = [];
+let seenIndices = [];
+let currentAdventureIndex = null;
+
+// --- MOBILE DETECTION SCRIPT ---
+function checkMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+}
+const isMobile = checkMobile();
+if (isMobile) {
+    document.body.classList.add('is-mobile');
+}
+// -------------------------------
+
+function reRoll() {
+    let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i));
+    if (unseenIndices.length < 3) {
+        seenIndices = [];
+        unseenIndices = ADVENTURES.map((_, i) => i);
+    }
+    activeIndices = unseenIndices.sort(() => Math.random() - 0.5).slice(0, 3);
+    seenIndices.push(...activeIndices);
+    updateUI(true);
+}
+
+function openShop(idx) {
+    currentAdventureIndex = idx;
+    const item = ADVENTURES[idx];
+    const gearList = document.getElementById('gear-list');
+    gearList.innerHTML = item.gear.map(g => `
+        <div class="gear-item">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:20px;">${g.i}</span>
+                <div>
+                    <div style="font-size:12px; font-weight:800;">${g.n}</div>
+                    <div style="font-size:10px; color:#4ade80; font-weight:900;">${g.p}</div>
+                </div>
+            </div>
+            <a href="https://www.rei.com/search?q=${encodeURIComponent(g.n)}" target="_blank" class="pass-btn">BUY</a>
+        </div>
+    `).join('');
+    document.getElementById('gear-overlay').style.display = 'block';
+}
+
+function closeGear() { document.getElementById('gear-overlay').style.display = 'none'; }
+
+function shareHike(index) {
+    const item = ADVENTURES[index];
+    const text = `Check out ${item.n} on Compass PNW!`;
+    if (navigator.share) navigator.share({ title: 'Compass PNW', text: text });
+    else alert("Shared: " + text);
+}
+
+function openDetail(index) {
+    const item = ADVENTURES[index];
+    const content = `
+        <div class="detail-body">
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 28px; font-weight: 900; margin-bottom: 2px; letter-spacing: -1px; line-height: 1;">${item.n}</div>
+                <p style="color:#888; font-size:12px; line-height:1.2;">${item.desc}</p>
+            </div>
+
+            <div class="detail-hero-container" style="background-image: url('${item.img}');">
+                <div style="position: absolute; bottom: 15px; left: 15px; right: 15px; padding: 12px; border-radius: 14px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size:8px; font-weight:900; color:#4ade80; margin-bottom:2px; text-transform:uppercase;">✨ Did you know?</div>
+                    <div style="font-size:10px; line-height:1.2; color:#fff; font-weight: 500;">${item.fact}</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 15px;">
+                ${item.details.map(d => `
+                    <div class="info-bubble">
+                        <div style="display: flex; flex-direction: column; width: 100%;">
+                            <div style="font-size: 8px; font-weight: 800; color: #666; text-transform: uppercase;">${d.l}</div>
+                            <div style="display: flex; align-items: center; font-size: ${d.isLive ? '10px' : '11px'}; font-weight: 700; color: #fff; line-height: 1;">
+                                ${d.isLive ? `<span class="live-dot"></span>` : ''}${d.v}
+                                ${d.link ? `<a href="${d.link}" target="_blank" class="pass-btn">GET PASS</a>` : ''}
+                                ${d.shop ? `<span onclick="openShop(${index})" class="shop-btn">SHOP</span>` : ''}
+                                ${d.isLive ? `
+                                    <div class="live-wrap">
+                                        <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${d.pct}%; background:${d.color};"></div></div>
+                                        <span class="live-timestamp">2m ago</span>
+                                    </div>` : ''}
+                            </div>
+                        </div>
+                        <span class="bubble-icon">${d.i}</span>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div style="font-size: 9px; font-weight: 800; color: #888; text-transform: uppercase; margin-bottom: 4px;">Wildlife & Plants</div>
+                        <div style="font-size: 11px; color: #fff; font-weight: 600;">${item.nature.join(' • ')}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 9px; font-weight: 800; color: #ef4444; text-transform: uppercase; margin-bottom: 4px;">Risk</div>
+                        <div style="font-size: 10px; color: #fff; font-weight: 900;">${item.risk}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: auto;">
+                <div class="action-row">
+                    <a href="http://googleusercontent.com/maps.google.com/search?api=1&query=${encodeURIComponent(item.n)}" target="_blank" class="btn-go">MAPS</a>
+                    <a href="https://www.alltrails.com/explore?q=${encodeURIComponent(item.n)}" target="_blank" class="btn-secondary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4L4 18H20L12 4ZM12 8.5L16.5 16.5H7.5L12 8.5ZM12 11.5L14 15.5H10L12 11.5Z" fill="#5DE372"/>
+                        </svg>
+                        ALLTRAILS
+                    </a>
+                </div>
+                <div class="btn-share" onclick="shareHike(${index})">SHARE TRIP</div>
+            </div>
+        </div>
+    `;
+    document.getElementById('detail-content').innerHTML = content;
+    document.getElementById('detail-view').style.display = 'block';
+}
+
+function closeDetail() { document.getElementById('detail-view').style.display = 'none'; }
+
+function updateUI(shuffleEffect = false) {
+    const feed = document.getElementById('feed');
+    feed.innerHTML = activeIndices.map((idx, i) => {
+        const pick = ADVENTURES[idx];
+        return `
+        <div class="glass-panel" style="${shuffleEffect ? `animation: springUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: ${i * 0.15}s; opacity: 0;` : ''}">
+            <div class="adventure-texture" style="background-image: url('${pick.img}')"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; position:relative; z-index:5;">
+                <div style="color:#4ade80; font-size:10px; font-weight:800; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 6px;">${pick.drive} min drive</div>
+                <div style="display:flex; gap:3px;">${pick.tags.map(t => `<span class="keyword-pill">${t}</span>`).join('')}</div>
+            </div>
+            <div style="font-size:16px; font-weight:900; margin-bottom: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); position:relative; z-index:5;">${pick.n}</div>
+            <p style="font-size:9px; color:#eee; margin-bottom: 8px; line-height:1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap:4px; background:rgba(0,0,0,0.4); backdrop-filter: blur(8px); padding:6px; border-radius:16px; margin-bottom:8px; border: 1px solid rgba(255,255,255,0.15); position:relative; z-index:5;">
+                <div class="stat-box"><span style="font-size:11px;">🥾</span><span class="stat-val">${pick.len}</span></div>
+                <div class="stat-box"><span style="font-size:11px;">⛰️</span><span class="stat-val">${pick.elev}</span></div>
+                <div class="stat-box">
+                    <div style="display:flex; gap:2px; margin-top:3px;">
+                        <div class="light green ${pick.diff === 'Easy' ? 'active' : ''}"></div>
+                        <div class="light yellow ${pick.diff === 'Mid' ? 'active' : ''}"></div>
+                        <div class="light red ${pick.diff === 'Hard' ? 'active' : ''}"></div>
+                    </div>
+                    <span class="stat-val">${pick.diff}</span>
+                </div>
+                <div class="stat-box" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 4px;">
+                    <span class="${pick.cls}" style="font-size:11px;">${pick.icon}</span>
+                    <span class="stat-val" style="color:#4ade80;">${pick.weather}</span>
+                </div>
+            </div>
+            <div class="btn-go" onclick="openDetail(${idx})" style="position:relative; z-index:5;">EXPLORE</div>
+        </div>`}).join('');
+}
+
+// Ensure parallax is disabled on mobile
+document.addEventListener("mousemove", e => {
+    if (isMobile) return; 
+    const phone = document.getElementById("phone");
+    const x = (window.innerWidth / 2 - e.pageX) / 45;
+    const y = (window.innerHeight / 2 - e.pageY) / 45;
+    phone.style.transform = `scale(0.85) rotateX(${y}deg) rotateY(${-x}deg)`;
+});
+
+window.onload = () => { reRoll(); };
+
+const emojiList = ["🌲", "⛰️", "🥾", "🌊", "🧗", "⛺"];
+function spawnEmoji() {
+    const phoneRect = document.getElementById('phone').getBoundingClientRect();
+    const el = document.createElement("div");
+    el.className = "fall";
+    el.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+    el.style.fontSize = "16px"; el.style.animationDuration = "12s"; 
+    let spawnX = Math.random() < 0.5 
+        ? Math.random() * (phoneRect.left - 50) 
+        : (phoneRect.right + 20) + Math.random() * (window.innerWidth - phoneRect.right - 50);
+    el.style.left = spawnX + "px";
+    document.getElementById('bg-effects').appendChild(el);
+    setTimeout(() => el.remove(), 12000);
+}
+
+function spawnInternalRain() {
+    const internalBg = document.getElementById('internal-bg-effects');
+    const el = document.createElement("div");
+    el.className = "internal-fall";
+    el.innerText = emojiList[Math.floor(Math.random() * emojiList.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.animationDuration = (10 + Math.random() * 8) + "s";
+    internalBg.appendChild(el);
+    setTimeout(() => el.remove(), 18000); 
+}
+
+setInterval(spawnEmoji, 1200);
+setInterval(spawnInternalRain, 800); 
+</script>
+</body>
+</html>
