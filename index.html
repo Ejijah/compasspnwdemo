@@ -234,13 +234,13 @@
 
         /* --- DONATION BUTTON STYLE --- */
         .btn-donate {
-            position: absolute; bottom: 20px; right: 20px; z-index: 100;
             background: rgba(0,0,0,0.5); color: #4ade80; padding: 10px 16px; border-radius: 50px;
             font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(74, 222, 128, 0.3);
             cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; gap: 8px; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+            width: fit-content; margin: 10px auto 20px; position: relative; z-index: 100;
         }
         .btn-donate:hover { background: rgba(74, 222, 128, 0.1); }
     </style>
@@ -252,10 +252,6 @@
 <div class="phone" id="phone">
     <div id="internal-bg-effects"></div>
     <div class="iphone-notch"><div class="speaker-grill"></div></div>
-
-    <a href="https://www.buymeacoffee.com/" target="_blank" class="btn-donate" id="coffee-button">
-        <span>☕ Buy me & my cute girl a coffee</span>
-    </a>
     
     <div id="gear-overlay">
         <div class="close-btn" onclick="closeGear()">✕</div>
@@ -537,7 +533,6 @@ function shareHike(index) {
 
 function openDetail(index) {
     const item = ADVENTURES[index];
-    document.getElementById('coffee-button').style.display = 'none';
     const content = `
         <div class="close-btn" onclick="closeDetail()">✕</div>
         <div class="detail-body">
@@ -610,7 +605,6 @@ function openDetail(index) {
 
 function closeDetail() { 
     document.getElementById('detail-view').style.display = 'none'; 
-    document.getElementById('coffee-button').style.display = 'flex';
 }
 
 function updateUI(shuffleEffect = false) {
@@ -644,7 +638,13 @@ function updateUI(shuffleEffect = false) {
                 </div>
             </div>
             <div class="btn-go" onclick="openDetail(${idx})" style="position:relative; z-index:5;">EXPLORE</div>
-        </div>`}).join('') + `<div id="spacer" style="height: 600px; width: 100%;"></div>`; 
+        </div>`}).join('') + `
+        
+        <a href="https://www.buymeacoffee.com/" target="_blank" class="btn-donate" id="coffee-button">
+            <span>☕ Buy me & my cute girl a coffee</span>
+        </a>
+
+        <div id="spacer" style="height: 600px; width: 100%;"></div>`; 
 }
 
 // --- SNAPPY SYMMETRICAL SLINGBACK SCRIPT ---
