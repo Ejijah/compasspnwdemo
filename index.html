@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compass PNW | V1.2</title>
+    <title>Compass PNW | V1.2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -25,20 +25,19 @@
         /* --- MOBILE FULLSCREEN BULLETPROOFING --- */
         body.is-mobile .phone {
             width: 100vw;
-            height: 100dvh; /* dvh handles mobile browser address bars */
+            height: 100dvh; 
             border-radius: 0;
             border: none;
             transform: none !important;
             box-shadow: none;
         }
         body.is-mobile .iphone-notch {
-            display: none; /* Hide fake notch on real devices */
+            display: none; 
         }
         body.is-mobile {
             perspective: none;
             background: #000;
         }
-        /* ---------------------------------------- */
 
         #internal-bg-effects {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -121,17 +120,31 @@
             text-transform: uppercase; position: relative; z-index: 5;
         }
 
-        #feed { padding: 0 15px; height: calc(100% - 110px); overflow: hidden; position: relative; z-index: 5; } 
+        #feed { 
+            padding: 0 15px; 
+            height: calc(100% - 110px); 
+            overflow-y: auto; 
+            position: relative; 
+            z-index: 5; 
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
+        } 
+        #feed::-webkit-scrollbar { display: none; }
         
         #detail-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 50; display: none; padding: 0;
-            overflow: hidden;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
             animation: detailSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        #detail-view::-webkit-scrollbar { display: none; }
         @keyframes detailSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        #detail-content { height: 100%; display: flex; flex-direction: column; }
+        #detail-content { min-height: 100%; display: flex; flex-direction: column; }
 
         .detail-hero-container {
             width: 100%; height: 180px; position: relative; overflow: hidden;
@@ -139,7 +152,7 @@
             margin-bottom: 15px;
         }
 
-        .detail-body { flex: 1; padding: 35px 20px 20px 20px; background: #000; display: flex; flex-direction: column; justify-content: flex-start; position: relative; }
+        .detail-body { flex: 1; padding: 20px 20px 20px 20px; background: #000; display: flex; flex-direction: column; justify-content: flex-start; position: relative; }
 
         .light { width: 7px; height: 7px; border-radius: 50%; background: #222; opacity: 0.3; }
         .light.green.active { background: #4ade80; box-shadow: 0 0 10px #4ade80; opacity: 1; }
@@ -165,7 +178,7 @@
             background-size: cover; background-position: center;
         }
         .close-btn { 
-            position: absolute; top: 35px; right: 15px; background: rgba(255,255,255,0.1); 
+            position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.1); 
             backdrop-filter: blur(5px); width: 32px; height: 32px; border-radius: 50%; display: flex; 
             align-items: center; justify-content: center; cursor: pointer; z-index: 60; color: white;
         }
@@ -228,13 +241,12 @@
     <div class="iphone-notch"><div class="speaker-grill"></div></div>
     
     <div id="gear-overlay">
-        <div class="close-btn" style="top: 12px;" onclick="closeGear()">✕</div>
+        <div class="close-btn" onclick="closeGear()">✕</div>
         <div style="font-size: 20px; font-weight: 900; margin-bottom: 20px; color:#4ade80;">GEAR CHECKLIST</div>
         <div id="gear-list"></div>
     </div>
 
     <div id="detail-view">
-        <div class="close-btn" onclick="closeDetail()">✕</div>
         <div id="detail-content"></div>
     </div>
 
@@ -242,7 +254,7 @@
         <div style="display:flex; flex-direction:column; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span class="compass-icon">🧭</span>
-                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px;">Compass PNW</span>
+                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
             </div>
             <div class="btn-reroll" onclick="reRoll()">
                 <span class="main-label">Explore More</span>
@@ -387,7 +399,7 @@ const ADVENTURES = [
           { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 25, color: "#4ade80" }, 
           { l: "Toilets", v: "Vault", i: "🚻" }, { l: "Gear", v: "", i: "🧥", shop: true }
       ],
-      gear: [{ n: "Rain Poncho", p: "$15", i: "🧥" }, { n: "Sturdy Sandals", p: "$100", i: "👡" }, { n: "Camera Lens Cloth", p: "$10", i: "🧼" }, { n: "Lightweight Shell", p: "$90", i: "🧥" }, { n: "Waterproof Watch", p: "$60", i: "⌚" }]
+      gear: [{ n: "Rain Poncho", p: "$15", i: "🧥" }, { n: "Sturdy Sandals", p: "$100", i: "👡" }, { n: "Camera Lens Cloth", p: "$10", i: "🧼" }, { l: "Lightweight Shell", p: "$90", i: "🧥" }, { n: "Waterproof Watch", p: "$60", i: "⌚" }]
     },
     { n: "Multnomah Falls", drive: 130, len: "2.4mi", elev: "800ft", diff: "Mid", vibe: "Iconic", weather: "48°", icon: "🌧️", cls: "weather-rain", desc: "Oregon's most famous landmark, a two-tier 620ft drop.", tags: ["Columbia", "Famous"], fact: "The bridge is named after Simon Benson, who built it in 1914 to provide the best view of the falls.", nature: ["Bald Eagles", "Pika", "Wildflowers"], risk: "Extreme Crowds", 
       img: "multnomahfalls.jpg",
@@ -450,7 +462,6 @@ let activeIndices = [];
 let seenIndices = [];
 let currentAdventureIndex = null;
 
-// --- MOBILE DETECTION SCRIPT ---
 function checkMobile() {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
 }
@@ -458,7 +469,6 @@ const isMobile = checkMobile();
 if (isMobile) {
     document.body.classList.add('is-mobile');
 }
-// -------------------------------
 
 function reRoll() {
     let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i));
@@ -502,8 +512,9 @@ function shareHike(index) {
 function openDetail(index) {
     const item = ADVENTURES[index];
     const content = `
+        <div class="close-btn" onclick="closeDetail()">✕</div>
         <div class="detail-body">
-            <div style="margin-bottom: 20px;">
+            <div style="margin-top: 25px; margin-bottom: 20px;">
                 <div style="font-size: 28px; font-weight: 900; margin-bottom: 2px; letter-spacing: -1px; line-height: 1;">${item.n}</div>
                 <p style="color:#888; font-size:12px; line-height:1.2;">${item.desc}</p>
             </div>
@@ -561,10 +572,12 @@ function openDetail(index) {
                 </div>
                 <div class="btn-share" onclick="shareHike(${index})">SHARE TRIP</div>
             </div>
+            <div id="spacer-detail" style="height: 600px; width: 100%;"></div>
         </div>
     `;
     document.getElementById('detail-content').innerHTML = content;
     document.getElementById('detail-view').style.display = 'block';
+    document.getElementById('detail-view').scrollTop = 0;
 }
 
 function closeDetail() { document.getElementById('detail-view').style.display = 'none'; }
@@ -599,10 +612,31 @@ function updateUI(shuffleEffect = false) {
                 </div>
             </div>
             <div class="btn-go" onclick="openDetail(${idx})" style="position:relative; z-index:5;">EXPLORE</div>
-        </div>`}).join('');
+        </div>`}).join('') + `<div id="spacer" style="height: 600px; width: 100%;"></div>`; 
 }
 
-// Ensure parallax is disabled on mobile
+// --- SNAPPY SLINGBACK BOUNCE SCRIPT ---
+function applySlingBack(element, threshold = 150) {
+    let scrollTimeout;
+    element.addEventListener('scroll', function () {
+        window.clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+            const maxScroll = element.scrollHeight - element.clientHeight;
+            const currentScroll = element.scrollTop;
+            
+            if (currentScroll > maxScroll - threshold) {
+                element.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }, 50); 
+    }, { passive: true });
+}
+
+applySlingBack(document.getElementById('feed'), 250);
+applySlingBack(document.getElementById('detail-view'), 350);
+
 document.addEventListener("mousemove", e => {
     if (isMobile) return; 
     const phone = document.getElementById("phone");
@@ -613,7 +647,7 @@ document.addEventListener("mousemove", e => {
 
 window.onload = () => { reRoll(); };
 
-const emojiList = ["🌲", "⛰️", "🥾", "🌊", "🧗", "⛺"];
+const emojiList = ["🌲", "⛰️", "🥾", "💧", "🧗", "⛺", "☀️", "🌸"];
 function spawnEmoji() {
     const phoneRect = document.getElementById('phone').getBoundingClientRect();
     const el = document.createElement("div");
