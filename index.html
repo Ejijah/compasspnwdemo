@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compass PNW | V1.2.1</title>
+    <title>UnlockPNW | V1.2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -57,8 +57,9 @@
 
         .speaker-grill { width: 45px; height: 4px; background: #1a1a1a; border-radius: 4px; border: 1px solid #222; }
 
-        .top-nav { padding: 15px 20px 8px 20px; display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 5; }
-        .hero-text { font-size: 20px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 5px; }
+        /* FIXED SPACING IN TOP NAV */
+        .top-nav { padding: 10px 20px 8px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 5; }
+        .hero-text { font-size: 18px; font-weight: 900; line-height: 0.9; letter-spacing: -1px; text-align: right; margin-top: 0; }
         .accent-green { color: #4ade80; }
 
         .btn-reroll {
@@ -84,11 +85,12 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-2px) rotate(5deg); }
         }
+        /* MOUNTAIN EMOJI SIZE REDUCED */
         .compass-icon { 
-            font-size: 40px; 
+            font-size: 35px; 
             animation: compassFloat 3s ease-in-out infinite; 
             display: inline-block;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+            filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.8));
         }
 
         .glass-panel {
@@ -128,7 +130,7 @@
 
         #feed { 
             padding: 0 15px; 
-            height: calc(100% - 110px); 
+            height: calc(100% - 100px); 
             overflow-y: auto; 
             position: relative; 
             z-index: 5; 
@@ -272,7 +274,7 @@
         <div style="display:flex; flex-direction:column; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span class="compass-icon">🏔️</span>
-                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">Compass PNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
+                <span style="font-weight:900; font-size: 13px; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 4px;">UnlockPNW <span style="font-size: 8px; color: #666; font-weight: 800; letter-spacing: 0;">V1.2.1</span></span>
             </div>
             <div class="btn-reroll" onclick="reRoll()">
                 <span class="main-label">Explore More</span>
@@ -529,8 +531,8 @@ function closeGear() { document.getElementById('gear-overlay').style.display = '
 
 function shareHike(index) {
     const item = ADVENTURES[index];
-    const text = `Check out ${item.n} on Compass PNW!`;
-    if (navigator.share) navigator.share({ title: 'Compass PNW', text: text });
+    const text = `Check out ${item.n} on UnlockPNW!`;
+    if (navigator.share) navigator.share({ title: 'UnlockPNW', text: text });
     else alert("Shared: " + text);
 }
 
@@ -649,29 +651,6 @@ function updateUI(shuffleEffect = false) {
 
         <div id="spacer" style="height: 100px; width: 100%;"></div>`; 
 }
-
-// --- SLINGBACK SCRIPT ---
-// Reduced threshold to limit how far down the user can scroll before snapping back
-function applySlingBack(element, threshold = 60) {
-    let scrollTimeout;
-    element.addEventListener('scroll', function () {
-        window.clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(function() {
-            const maxScroll = element.scrollHeight - element.clientHeight;
-            const currentScroll = element.scrollTop;
-            
-            if (currentScroll > maxScroll - threshold) {
-                element.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            else if (currentScroll > 0 && currentScroll < threshold) {
-                element.scrollTo({ top: maxScroll, behavior: 'smooth' });
-            }
-        }, 350); 
-    }, { passive: true });
-}
-
-applySlingBack(document.getElementById('feed'), 60);
-applySlingBack(document.getElementById('detail-view'), 60);
 
 document.addEventListener("mousemove", e => {
     if (isMobile) return; 
