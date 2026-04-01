@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,7 +102,7 @@
             border-radius: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
             font-size: 11px; cursor: pointer; transition: all 0.2s; border: none; box-sizing: border-box;
             text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;
-            width: 85px; min-width: 85px; margin: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 72px; min-width: 72px; margin: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .btn-go:active { transform: scale(0.96); background: #f0fdf4; }
 
@@ -128,6 +127,7 @@
             padding: 0 15px; 
             height: calc(100% - 130px); 
             overflow-y: auto; 
+            overflow-x: hidden;
             position: relative; 
             z-index: 5; 
             scrollbar-width: none;
@@ -288,28 +288,32 @@
         }
         .btn-donate:hover { background: #f0fdf4; }
 
-        /* --- CAROUSEL SLIDER STYLES --- */
-        .card-slot {
+        /* --- 4x3 GRID & CONTINUOUS MARQUEE STYLES --- */
+        .feed-track-container {
             width: 100%;
-            margin-bottom: 12px;
-            overflow: hidden;
-            border-radius: 24px;
-            position: relative;
-            touch-action: pan-y;
+            overflow: visible;
         }
-        .card-track {
+        .feed-track {
             display: flex;
-            width: 100%;
-            transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+            gap: 15px;
+            width: max-content;
             will-change: transform;
-            cursor: grab;
         }
-        .card-track:active {
-            cursor: grabbing;
+        .mini-card {
+            width: 100px;
+            height: 130px;
+            border-radius: 18px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid #10b981;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .card-wrapper {
-            flex: 0 0 100%;
-            width: 100%;
+        .mini-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
     </style>
 </head>
@@ -334,6 +338,11 @@
 
     <div id="detail-view">
         <div id="detail-content"></div>
+    </div>
+
+    <!-- PREVIEW OVERLAY (EXPANDS IN CENTER) -->
+    <div id="preview-view" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 105; display: none; padding: 20px; flex-direction: column; justify-content: center; pointer-events: none; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);" onclick="if(event.target===this) closePreview(event)">
+        <div id="preview-content" style="pointer-events: auto; transform: scale(0.95); opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);"></div>
     </div>
 
     <div class="top-nav">
@@ -814,12 +823,13 @@ let isSearching = false;
 let activeSearchTag = null;
 let tagsVisible = false;
 
-let slotTimers = [];
-let slotTimeouts = [];
-let slotIsAnimating = {0: false, 1: false, 2: false};
-let touchStartX = {0: null, 1: null, 2: null};
-let touchStartY = {0: null, 1: null, 2: null};
-let touchCurrentX = {0: null, 1: null, 2: null};
+let feedRowTranslates = [0, -40, -10, -60];
+let feedRowSpeeds = [0.3, 0.4, 0.35, 0.45];
+let rowIsHovered = [false, false, false, false];
+let isFeedHovered = false; // Master override for when preview is open
+let feedAnimationFrame;
+
+let availableIndices = [];
 
 // Custom JS Animation variables for the marquee tags
 let tagTranslate = 0;
@@ -938,19 +948,9 @@ function reRoll() {
     }
 
     if (firstLoad) {
-        activeIndices = [7, 4, 9]; // Toketee, Blue Pool, Abiqua
-        seenIndices = [...activeIndices];
         firstLoad = false;
-    } else {
-        let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i));
-        if (unseenIndices.length < 3) {
-            seenIndices = [];
-            unseenIndices = ADVENTURES.map((_, i) => i);
-        }
-        activeIndices = unseenIndices.sort(() => Math.random() - 0.5).slice(0, 3);
-        seenIndices.push(...activeIndices);
     }
-    renderFeed(activeIndices, false, true);
+    renderFeed([], false, true);
 }
 
 function openShop(idx) {
@@ -1089,15 +1089,33 @@ function closeDetail() {
     document.getElementById('detail-view').style.display = 'none'; 
 }
 
-function getNewAdventure() {
-    let unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !seenIndices.includes(i) && !activeIndices.includes(i));
-    if (unseenIndices.length === 0) {
-        seenIndices = [...activeIndices];
-        unseenIndices = ADVENTURES.map((_, i) => i).filter(i => !activeIndices.includes(i));
-    }
-    const nextIdx = unseenIndices[Math.floor(Math.random() * unseenIndices.length)];
-    seenIndices.push(nextIdx);
-    return nextIdx;
+function openPreview(idx) {
+    isFeedHovered = true; 
+    const container = document.getElementById('preview-view');
+    const content = document.getElementById('preview-content');
+    
+    content.innerHTML = `
+        <div style="position: relative;">
+            <div class="close-btn" onclick="closePreview(event)" style="top: -15px; right: -10px; z-index: 200;">✕</div>
+            ${generateCardHTML(ADVENTURES[idx], idx, false, 0)}
+        </div>
+    `;
+    
+    container.style.display = 'flex';
+    void container.offsetWidth; // Trigger reflow
+    content.style.transform = 'scale(1)';
+    content.style.opacity = '1';
+}
+
+function closePreview(e) {
+    if(e) e.stopPropagation();
+    const content = document.getElementById('preview-content');
+    content.style.transform = 'scale(0.95)';
+    content.style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('preview-view').style.display = 'none';
+        isFeedHovered = false; 
+    }, 300);
 }
 
 function generateCardHTML(pick, idx, shuffleEffect, delay) {
@@ -1113,7 +1131,7 @@ function generateCardHTML(pick, idx, shuffleEffect, delay) {
         <div style="flex-grow: 1;"></div>
         
         <div style="font-size:18px; font-weight:900; margin-bottom: 2px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.n}</div>
-        <p style="font-size:11.5px; color:#eee; margin-bottom: 12px; line-height:1.2; text-shadow: 0 1px 3px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
+        <p style="font-size:11.5px; color:#eee; margin-bottom: 12px; line-height:1.2; text-shadow: 0 0 8px rgba(252, 211, 77, 0.6), 0 1px 3px rgba(0,0,0,0.8); position:relative; z-index:5;">${pick.desc}</p>
         
         <div style="display:flex; align-items:center; gap:8px; position:relative; z-index:5;">
             <div class="btn-go" onclick="openDetail(${idx})">EXPLORE</div>
@@ -1137,153 +1155,86 @@ function generateCardHTML(pick, idx, shuffleEffect, delay) {
     </div>`;
 }
 
-function slideSlot(slotIdx, dir, dragOffset = 0) {
-    if (slotIsAnimating[slotIdx] || isSearching) return;
-    slotIsAnimating[slotIdx] = true;
-
-    const track = document.getElementById(`track-${slotIdx}`);
-    if (!track) {
-        slotIsAnimating[slotIdx] = false;
-        return;
-    }
-
-    const nextIdx = getNewAdventure();
-    const newCardHTML = `<div class="card-wrapper">${generateCardHTML(ADVENTURES[nextIdx], nextIdx, false, 0)}</div>`;
-
-    track.style.transition = 'none';
-    if (dir === 1) { 
-        track.insertAdjacentHTML('beforeend', newCardHTML);
-        track.style.transform = `translateX(${dragOffset}px)`;
-    } else { 
-        track.insertAdjacentHTML('afterbegin', newCardHTML);
-        track.style.transform = `translateX(calc(-100% + ${dragOffset}px))`;
-    }
-
-    void track.offsetWidth;
-
-    track.style.transition = 'transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)';
-    if (dir === 1) {
-        track.style.transform = `translateX(-100%)`;
-    } else {
-        track.style.transform = `translateX(0%)`;
-    }
-
-    setTimeout(() => {
-        track.style.transition = 'none';
-        track.style.transform = `translateX(0%)`;
-        if (dir === 1) {
-            track.firstElementChild.remove();
-        } else {
-            track.lastElementChild.remove();
-        }
-        activeIndices[slotIdx] = nextIdx;
-        slotIsAnimating[slotIdx] = false;
-    }, 650);
+function generateMiniCardHTML(idx) {
+    const pick = ADVENTURES[idx];
+    return `<div class="mini-card" data-idx="${idx}" style="background-image: url('${pick.img}')" onclick="openPreview(${idx})"></div>`;
 }
 
-function startAutoSlide(slotIdx, dir, immediate = true) {
+function animateFeed() {
     if (isSearching) return;
-    if (immediate) slideSlot(slotIdx, dir);
-    slotTimers[slotIdx] = setInterval(() => {
-        slideSlot(slotIdx, dir);
-    }, 4500); 
-}
-
-function handleTouchStart(e, slotIdx) {
-    if (slotIsAnimating[slotIdx]) return;
-    clearInterval(slotTimers[slotIdx]);
-    const touch = e.touches ? e.touches[0] : e;
-    touchStartX[slotIdx] = touch.clientX;
-    touchStartY[slotIdx] = touch.clientY;
-    touchCurrentX[slotIdx] = touch.clientX;
-}
-
-function handleTouchMove(e, slotIdx) {
-    if (slotIsAnimating[slotIdx] || touchStartX[slotIdx] == null) return;
-    const touch = e.touches ? e.touches[0] : e;
-    const deltaX = touch.clientX - touchStartX[slotIdx];
-    const deltaY = touch.clientY - touchStartY[slotIdx];
-    
-    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-        touchStartX[slotIdx] = null;
-        return;
-    }
-    
-    touchCurrentX[slotIdx] = touch.clientX;
-    const track = document.getElementById(`track-${slotIdx}`);
-    if(track) {
-        const visualDrag = Math.max(-60, Math.min(60, deltaX));
-        track.style.transition = 'none';
-        track.style.transform = `translateX(${visualDrag}px)`;
-    }
-}
-
-function handleTouchEnd(e, slotIdx) {
-    if (touchStartX[slotIdx] == null) return;
-    const deltaX = touchCurrentX[slotIdx] - touchStartX[slotIdx];
-    const visualDrag = Math.max(-60, Math.min(60, deltaX));
-    
-    if (Math.abs(deltaX) > 40) {
-        const dir = deltaX < 0 ? 1 : -1; 
-        slideSlot(slotIdx, dir, visualDrag);
-    } else {
-        const track = document.getElementById(`track-${slotIdx}`);
-        if (track) {
-            track.style.transition = 'transform 0.3s ease';
-            track.style.transform = `translateX(0%)`;
+    for(let i=0; i<4; i++) {
+        if (isFeedHovered || rowIsHovered[i]) continue;
+        let track = document.getElementById(`feed-track-${i}`);
+        if (!track) continue;
+        
+        feedRowTranslates[i] -= feedRowSpeeds[i];
+        
+        // Width (100) + Gap (15) = 115
+        if (feedRowTranslates[i] <= -115) {
+            feedRowTranslates[i] += 115;
+            
+            let removedCard = track.firstElementChild;
+            let removedIdx = parseInt(removedCard.getAttribute('data-idx'));
+            if (!isNaN(removedIdx)) availableIndices.push(removedIdx);
+            removedCard.remove();
+            
+            let randomArrIdx = Math.floor(Math.random() * availableIndices.length);
+            let nextIdx = availableIndices.splice(randomArrIdx, 1)[0];
+            
+            track.insertAdjacentHTML('beforeend', generateMiniCardHTML(nextIdx));
         }
+        track.style.transform = `translateX(${feedRowTranslates[i]}px)`;
     }
-    
-    touchStartX[slotIdx] = null;
-    const directions = [1, -1, 1];
-    startAutoSlide(slotIdx, directions[slotIdx], false);
+    feedAnimationFrame = requestAnimationFrame(animateFeed);
 }
 
 function renderFeed(indicesToRender, isSearch = false, shuffleEffect = false) {
     const feed = document.getElementById('feed');
-    
-    slotTimers.forEach(t => clearInterval(t));
-    slotTimeouts.forEach(t => clearTimeout(t));
-    slotTimers = [];
-    slotTimeouts = [];
+    cancelAnimationFrame(feedAnimationFrame);
 
-    if (indicesToRender.length === 0) {
+    if (isSearch && indicesToRender.length === 0) {
         feed.innerHTML = `<div style="text-align:center; padding: 40px 20px; color: #ffffff; font-size: 14px; font-weight: 800;">No adventures found. Try a different search!</div>`;
         return;
     }
 
     if (isSearch) {
-        feed.innerHTML = indicesToRender.map((idx, i) => `
-            <div style="margin-bottom:12px;">
-                ${generateCardHTML(ADVENTURES[idx], idx, shuffleEffect, i * 0.15)}
+        feed.innerHTML = `
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; padding-top: 10px;">
+                ${indicesToRender.map(idx => generateMiniCardHTML(idx)).join('')}
             </div>
-        `).join('') + `<div id="spacer" style="height: 100px; width: 100%;"></div>`;
+            <div id="spacer" style="height: 100px; width: 100%;"></div>
+        `;
     } else {
-        feed.innerHTML = indicesToRender.map((idx, i) => `
-            <div class="card-slot" id="slot-${i}">
-                <div class="card-track" id="track-${i}"
-                     ontouchstart="handleTouchStart(event, ${i})" 
-                     ontouchmove="handleTouchMove(event, ${i})" 
-                     ontouchend="handleTouchEnd(event, ${i})"
-                     onmousedown="handleTouchStart(event, ${i})"
-                     onmousemove="handleTouchMove(event, ${i})"
-                     onmouseup="handleTouchEnd(event, ${i})"
-                     onmouseleave="handleTouchEnd(event, ${i})">
-                    <div class="card-wrapper">
-                        ${generateCardHTML(ADVENTURES[idx], idx, shuffleEffect, i * 0.15)}
-                    </div>
-                </div>
-            </div>
-        `).join('') + `
-        <a href="https://www.buymeacoffee.com/UNLOCKPNW" target="_blank" class="btn-donate" id="coffee-button">
+        availableIndices = Array.from({length: ADVENTURES.length}, (_, i) => i);
+        // Shuffle the pool initially
+        for (let i = availableIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
+        }
+        
+        let html = `<div style="display: flex; flex-direction: column; gap: 15px; padding-top: 10px;">`;
+        
+        // 4 rows, 6 columns each to ensure seamless looping off-screen (Total 24 unique starting cards)
+        for(let r=0; r<4; r++) {
+            html += `<div class="feed-track-container" onmouseenter="rowIsHovered[${r}]=true" onmouseleave="rowIsHovered[${r}]=false" ontouchstart="rowIsHovered[${r}]=true" ontouchend="setTimeout(()=>rowIsHovered[${r}]=false, 2000)">
+                        <div class="feed-track" id="feed-track-${r}">`;
+            for(let c=0; c<6; c++) {
+                let nextIdx = availableIndices.pop(); 
+                html += generateMiniCardHTML(nextIdx);
+            }
+            html += `   </div>
+                     </div>`;
+        }
+        
+        html += `</div>
+        <a href="https://www.buymeacoffee.com/UNLOCKPNW" target="_blank" class="btn-donate" id="coffee-button" style="margin-top: 20px;">
             <span>☕ Buy me & my cute girl a coffee</span>
         </a>
         <div id="spacer" style="height: 100px; width: 100%;"></div>`;
-
-        const directions = [1, -1, 1];
-        slotTimeouts.push(setTimeout(() => startAutoSlide(0, directions[0], true), 1500));
-        slotTimeouts.push(setTimeout(() => startAutoSlide(1, directions[1], true), 2500));
-        slotTimeouts.push(setTimeout(() => startAutoSlide(2, directions[2], true), 3500));
+        
+        feed.innerHTML = html;
+        feedRowTranslates = [0, -40, -10, -60]; // Staggered starting points
+        animateFeed();
     }
 }
 
