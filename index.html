@@ -516,7 +516,7 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Insulated Jacket", p: "$180", i: "🧥" }, { n: "Gore-Tex Shell", p: "$250", i: "🧥" }, { n: "Gloves", p: "$30", i: "🧤" }, { n: "Camera Rain Cover", p: "$20", i: "🌧️" }, { n: "Heavy Socks", p: "$25", i: "🧦" }]
     },
-    { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isn't official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
+    { n: "Abiqua Falls", drive: 95, len: "0.8mi", elev: "180ft", diff: "Hard", vibe: "Secret", weather: "49°", icon: "☁️", cls: "weather-cloud", desc: "An amphitheater of basalt columns and a massive teal pool.", tags: ["Off-Grid", "Teal"], fact: "The trail isnt official—it's a steep, rope-assisted descent into a private abbey's land.", nature: ["Sword Ferns", "Vine Maple", "Trout"], risk: "Steep Scramble / Ropes", 
       img: "abiquafalls.jpg",
       summary: "A hidden gem featuring a spectacular basalt amphitheater and a deep, teal-colored pool.",
       info: "Located on private land owned by the Mount Angel Abbey, Abiqua Falls is one of the most photogenic spots in Oregon. The trail is steep and unmaintained, requiring a scramble down a hillside. The waterfall itself is a 92-foot drop surrounded by some of the most perfectly formed columnar basalt in the Pacific Northwest, looking almost like a pipe organ.",
@@ -841,19 +841,6 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Windbreaker", p: "$90", i: "🧥" }, { n: "Beach Towel", p: "$25", i: "🧣" }, { n: "Binoculars", p: "$120", i: "🔭" }, { n: "Sunscreen", p: "$15", i: "🧴" }, { n: "Sandals", p: "$50", i: "🩴" }]
     },
-    { n: "Thor's Well", drive: 120, len: "0.5mi", elev: "20ft", diff: "Easy", vibe: "Coast", weather: "50°", icon: "🌧️", cls: "weather-rain", desc: "A seemingly bottomless sinkhole draining the Pacific.", tags: ["Ocean", "Geology"], fact: "It's actually a collapsed sea cave shaped by ocean waves.", nature: ["Seagulls", "Anemones", "Mussels"], risk: "Sneaker Waves", 
-      img: "AUTO", wiki: "Cape Perpetua",
-      summary: "A spectacular coastal geologic feature that appears to endlessly drain the ocean into an abyss.",
-      info: "Located in the Cape Perpetua Scenic Area, Thor's Well is a hole in the basalt shoreline that puts on a mesmerizing show during high tide or winter storms. Waves roll underneath it and erupt upward, then violently suck back down. Visitors must exercise extreme caution, as the area is infamous for unpredictable and deadly sneaker waves.",
-      details: [
-          { l: "Weather", v: "🌧️ 50°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Cape+Perpetua" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "NW For", i: "🎫" }, 
-          { l: "cell service", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 60, color: "#facc15" }, 
-          { l: "Air Quality", v: "AQI 10", i: "🍃", isLive: true, pct: 10, color: "#10b981" }, 
-          { l: "Parking", v: "Open", i: "🅿️", isLive: true, pct: 40, color: "#10b981" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
-      ],
-      gear: [{ n: "Rain Shell", p: "$130", i: "🧥" }, { n: "Waterproof Shoes", p: "$110", i: "🥾" }, { n: "Lens Cloth", p: "$10", i: "🧼" }, { n: "Camera Tripod", p: "$80", i: "🔭" }, { n: "Gloves", p: "$25", i: "🧤" }]
-    },
     { n: "Trillium Lake", drive: 60, len: "1.9mi", elev: "10ft", diff: "Easy", vibe: "Lake", weather: "45°", icon: "☀️", cls: "weather-sun", desc: "Perfect mirror reflections of Mount Hood.", tags: ["Mt Hood", "Lake"], fact: "The lake is man-made, created by a dam built in 1960 by the State Department of Fish and Wildlife.", nature: ["Rainbow Trout", "Osprey", "Beavers"], risk: "Mosquitoes", 
       img: "AUTO", wiki: "Trillium Lake",
       summary: "A wildly popular alpine lake offering arguably the best reflection photography of Mount Hood.",
@@ -893,19 +880,6 @@ const ADVENTURES = [
       ],
       gear: [{ n: "Wide Brim Hat", p: "$40", i: "🤠" }, { n: "Sunscreen SPF 50", p: "$15", i: "🧴" }, { n: "CamelBak 2L", p: "$80", i: "💧" }, { n: "Breathable Shirt", p: "$65", i: "👕" }, { n: "Camera Polarizer", p: "$50", i: "📷" }]
     },
-    { n: "Hurricane Ridge", drive: 200, len: "3.2mi", elev: "700ft", diff: "Mid", vibe: "Summit", weather: "38°", icon: "☁️", cls: "weather-cloud", desc: "Panoramic views of the Olympic Mountains.", tags: ["Mountains", "Views"], fact: "Winds here can reach over 75 mph during winter storms.", nature: ["Olympic Marmots", "Black Bears", "Columbian Black-tailed Deer"], risk: "Sudden Fog", 
-      img: "AUTO", wiki: "Hurricane Ridge",
-      summary: "The most easily accessible mountain area in Olympic National Park, offering 360-degree views.",
-      info: "Hurricane Ridge is a 5,242-foot high mountainous area within Olympic National Park. The ridge gets its name from the fierce gales that regularly batter the exposed landscape. Despite the harsh winters, the summer brings an explosion of wildflowers and easily spotted wildlife, including the endemic Olympic Marmot. On clear days, you can see all the way to Canada.",
-      details: [
-          { l: "Weather", v: "☁️ 38°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Hurricane+Ridge" }, { l: "Dogs", v: "No", i: "🚫" }, { l: "pass required", v: "Nat Prk", i: "🎫" }, 
-          { l: "cell service", v: "Fair", i: "📶" }, { l: "LIVE - CROWDS", v: "High", i: "👥", isLive: true, pct: 85, color: "#ef4444" }, 
-          { l: "Air Quality", v: "AQI 10", i: "🍃", isLive: true, pct: 10, color: "#10b981" }, 
-          { l: "Parking", v: "Full", i: "🅿️", isLive: true, pct: 90, color: "#ef4444" }, 
-          { l: "Toilets", v: "Full", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
-      ],
-      gear: [{ n: "Windbreaker Shell", p: "$140", i: "🧥" }, { n: "Warm Beanie", p: "$25", i: "🧶" }, { n: "Binoculars", p: "$110", i: "🔭" }, { n: "Gloves", p: "$30", i: "🧤" }, { n: "Sturdy Boots", p: "$160", i: "🥾" }]
-    },
     { n: "Tumalo Falls", drive: 160, len: "2.0mi", elev: "400ft", diff: "Easy", vibe: "Waterfall", weather: "55°", icon: "☀️", cls: "weather-sun", desc: "An iconic 97-foot plunge in the Deschutes National Forest.", tags: ["Bend", "Waterfall"], fact: "It's highly accessible, with the main viewpoint just steps from the parking lot.", nature: ["Mule Deer", "Ponderosa Pine", "Rainbow Trout"], risk: "Ice in Winter", 
       img: "AUTO", wiki: "Tumalo Falls",
       summary: "A spectacular, easily accessible waterfall near Bend, Oregon, nestled in a pine forest canyon.",
@@ -931,19 +905,6 @@ const ADVENTURES = [
           { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
       ],
       gear: [{ n: "Sun Protection", p: "$20", i: "🧴" }, { n: "Gaiters (for ash)", p: "$45", i: "🧤" }, { n: "High-Capacity Water", p: "$50", i: "💧" }, { n: "Sturdy Boots", p: "$170", i: "🥾" }, { n: "Wide Brim Hat", p: "$35", i: "🤠" }]
-    },
-    { n: "Cape Flattery", drive: 280, len: "1.5mi", elev: "200ft", diff: "Easy", vibe: "Coast", weather: "48°", icon: "☁️", cls: "weather-cloud", desc: "The northwesternmost point of the contiguous US.", tags: ["Ocean", "Cliffs"], fact: "You can see Tatoosh Island and its lighthouse just offshore.", nature: ["Sea Otters", "Bald Eagles", "Kelp Forests"], risk: "Steep Drops", 
-      img: "AUTO", wiki: "Cape Flattery",
-      summary: "A breathtaking, easily accessible trail leading to the rugged northwestern edge of the lower 48 states.",
-      info: "Located on the Makah Reservation, the Cape Flattery trail is heavily boardwalked and leads through a dense, wet forest before opening up to spectacular viewing platforms. Below, the Pacific Ocean crashes violently into sea caves and rugged cliffs. It is a prime location for spotting marine life, including sea otters, sea lions, and migrating gray whales.",
-      details: [
-          { l: "Weather", v: "☁️ 48°", i: "🌡️" }, { l: "Camping", v: "", i: "⛺", view: true, link: "https://www.google.com/maps/search/camping+near+Neah+Bay" }, { l: "Dogs", v: "Leashed", i: "🐕" }, { l: "pass required", v: "Makah Rec", i: "🎫" }, 
-          { l: "cell service", v: "Poor", i: "📶" }, { l: "LIVE - CROWDS", v: "Med", i: "👥", isLive: true, pct: 50, color: "#facc15" }, 
-          { l: "Air Quality", v: "AQI 5", i: "🍃", isLive: true, pct: 5, color: "#10b981" }, 
-          { l: "Parking", v: "Med", i: "🅿️", isLive: true, pct: 60, color: "#facc15" }, 
-          { l: "Toilets", v: "Vault", i: "🚻" }, { l: "More Info", v: "", i: "🧠", moreInfo: true }
-      ],
-      gear: [{ n: "Binoculars", p: "$110", i: "🔭" }, { n: "Rain Shell", p: "$130", i: "🧥" }, { n: "Comfortable Shoes", p: "$80", i: "👟" }, { n: "Camera Long Lens", p: "$400", i: "📷" }, { n: "Thermos", p: "$30", i: "☕" }]
     }
 ];
 
@@ -985,7 +946,47 @@ let rowIsHovered = [false, false, false, false];
 let isFeedHovered = false; 
 let feedAnimationFrame;
 
-let availableIndices = [];
+/* DECK & DISCARD SYSTEM FOR FRESH CARDS */
+let globalDrawPile = [];
+let globalDiscardPile = [];
+let isDeckInitialized = false;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function initDeck() {
+    globalDrawPile = Array.from({length: ADVENTURES.length}, (_, i) => i);
+    shuffleArray(globalDrawPile);
+    globalDiscardPile = [];
+    isDeckInitialized = true;
+}
+
+function drawCardIdx() {
+    if (!isDeckInitialized) initDeck();
+    if (globalDrawPile.length === 0) {
+        // Recycle the pile once it empties
+        globalDrawPile = globalDiscardPile;
+        globalDiscardPile = [];
+        shuffleArray(globalDrawPile);
+    }
+    // Fallback if mathematically empty (e.g. all available cards are somehow active)
+    if (globalDrawPile.length === 0) {
+        let temp = Array.from({length: ADVENTURES.length}, (_, i) => i);
+        shuffleArray(temp);
+        return temp[0];
+    }
+    return globalDrawPile.pop();
+}
+
+function discardCardIdx(idx) {
+    if (idx !== undefined && idx !== null && !isNaN(idx)) {
+        globalDiscardPile.push(idx);
+    }
+}
 
 // Custom JS Animation variables for the marquee tags
 let tagTranslate = 0;
@@ -1338,12 +1339,12 @@ function animateFeed() {
             
             let removedCard = track.firstElementChild;
             let removedIdx = parseInt(removedCard.getAttribute('data-idx'));
-            if (!isNaN(removedIdx)) availableIndices.push(removedIdx);
+            
+            // Add to discard pile instead of resetting to generic pool
+            discardCardIdx(removedIdx);
             removedCard.remove();
             
-            let randomArrIdx = Math.floor(Math.random() * availableIndices.length);
-            let nextIdx = availableIndices.splice(randomArrIdx, 1)[0];
-            
+            let nextIdx = drawCardIdx();
             track.insertAdjacentHTML('beforeend', generateMiniCardHTML(nextIdx));
         }
         track.style.transform = `translateX(${feedRowTranslates[i]}px)`;
@@ -1368,19 +1369,22 @@ function renderFeed(indicesToRender, isSearch = false, shuffleEffect = false) {
             <div id="spacer" style="height: 100px; width: 100%;"></div>
         `;
     } else {
-        availableIndices = Array.from({length: ADVENTURES.length}, (_, i) => i);
-        for (let i = availableIndices.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
-        }
-        
+        if (!isDeckInitialized) initDeck();
+
+        // When re-rendering (e.g. user pressed MORE), collect currently visible cards
+        // and put them in the discard pile so they aren't immediately re-drawn.
+        document.querySelectorAll('#feed .mini-card').forEach(card => {
+            let idx = parseInt(card.getAttribute('data-idx'));
+            discardCardIdx(idx);
+        });
+
         let html = `<div style="display: flex; flex-direction: column; gap: 15px; padding-top: 10px;">`;
         
         for(let r=0; r<4; r++) {
             html += `<div class="feed-track-container" onmouseenter="rowIsHovered[${r}]=true" onmouseleave="rowIsHovered[${r}]=false" ontouchstart="rowIsHovered[${r}]=true" ontouchend="setTimeout(()=>rowIsHovered[${r}]=false, 2000)">
                         <div class="feed-track" id="feed-track-${r}">`;
             for(let c=0; c<6; c++) {
-                let nextIdx = availableIndices.pop(); 
+                let nextIdx = drawCardIdx(); 
                 html += generateMiniCardHTML(nextIdx);
             }
             html += `   </div>
